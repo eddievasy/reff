@@ -18,6 +18,11 @@
         <![endif]-->
         <h1>Hello World</h1>
         <p>This is our second HTML page</p>
+        <ul>
+            {% for entry in entries %}
+            <li> {{ entry }} </li>
+            {% endfor %}
+        </ul>
         <script src="" async defer></script>
     </body>
 </html>
