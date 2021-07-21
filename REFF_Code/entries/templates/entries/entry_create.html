@@ -2,7 +2,8 @@
 
 {% block content %}
 
-        <a href="{% url 'entries:entry-list' %}">Go back to the entry list.</a> 
+        <a href="{% url 'entries:entry-list' %}">Go back to the entry list</a> 
+        <hr />
         <h2>Create a new entry</h2>
         <!-- 'action="."' below indicated where the form is submitted. '.' means current URL -->
         <form method="POST" action=".">

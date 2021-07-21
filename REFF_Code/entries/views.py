@@ -4,6 +4,9 @@ from entries.models import Entry, Contributor
 from entries.forms import EntryForm, EntryModelForm
 
 # Create your views here.
+
+def landing_page(request):
+    return render(request, "landing.html")
  
 def entry_list(request):
     entries = Entry.objects.all()
