@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>My Document</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+
+        <style>
+        .entry {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 6px;
+            padding-right: 6px;
+            maring-top: 10px;
+            background-color: #f6f6f6;
+            width: 100%;
+        }
+        </style>
+    </head>
+    <body>
+        <a href="/entries">Go back to the entry list.</a> 
+        <h2>Update the entry: {{ entry.fact }}</h2>
+        <!-- 'action="."' below indicated where the form is submitted. '.' means current URL -->
+        <form method="POST">
+            <!-- The csrf token below is good security implementation for form submission within Django -->
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit"> Submit </button>
+        </form>
+        
+    </body>
+</html>

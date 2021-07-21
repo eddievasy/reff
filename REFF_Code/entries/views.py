@@ -39,42 +39,60 @@ def entry_create(request):
 
     return render(request, "entries/entry_create.html", context)
 
+
+def entry_update(request, pk):
+    entry = Entry.objects.get(id=pk)
+    form = EntryModelForm(instance=entry)
+    if request.method == "POST":
+        form = EntryModelForm(request.POST, instance=entry)
+        if form.is_valid():
+            form.save()
+            return redirect("/entries")
+     
+    context = {
+        "form": form,
+        "entry": entry
+    }
+
+    return render(request, "entries/entry_update.html", context)
+
+
 # Below we've got the form using the EntryForm as opposed to EntryModelForm
 # However, this version is lengthier. The one above abstracts more code.
 
 # def entry_create(request):
-#     # Generate empty form
-#     form = EntryForm()
-#     # If the request is of type 'POST'
-#     if request.method=="POST":
-#         print('Receiving a post request.')
-#         form = EntryForm(request.POST)
-#         # Check to see that the form is valid
-#         if form.is_valid():
-#             print("The form is valid.")
-#             print(form.cleaned_data)
+    # # Generate empty form
+    # form = EntryForm()
+    # # If the request is of type 'POST'
+    # if request.method=="POST":
+    #     print('Receiving a post request.')
+    #     form = EntryForm(request.POST)
+    #     # Check to see that the form is valid
+    #     if form.is_valid():
+    #         print("The form is valid.")
+    #         print(form.cleaned_data)
 
-#             fact = form.cleaned_data['fact']
-#             source = form.cleaned_data['source']
-#             credibility = form.cleaned_data['credibility']
-#             category = form.cleaned_data['category']
+    #         fact = form.cleaned_data['fact']
+    #         source = form.cleaned_data['source']
+    #         credibility = form.cleaned_data['credibility']
+    #         category = form.cleaned_data['category']
 
-#             contributor = Contributor.objects.first()
+    #         contributor = Contributor.objects.first()
 
-#             Entry.objects.create(
-#                 fact=fact,
-#                 source=source,
-#                 credibility=credibility,
-#                 category=category,
-#                 user=contributor
-#             )
+    #         Entry.objects.create(
+    #             fact=fact,
+    #             source=source,
+    #             credibility=credibility,
+    #             category=category,
+    #             user=contributor
+    #         )
 
-#             # Return to the entries page after the new entry has been created
-#             print('New entry has been created.')
-#             return redirect("/entries")
+    #         # Return to the entries page after the new entry has been created
+    #         print('New entry has been created.')
+    #         return redirect("/entries")
 
-#     context= {
-#         "form": form
-#     }
+    # context= {
+    #     "form": form
+    # }
 
 #     return render(request, "entries/entry_create.html", context)
