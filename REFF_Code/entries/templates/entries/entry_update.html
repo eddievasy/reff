@@ -21,7 +21,7 @@
         </style>
     </head>
     <body>
-        <a href="/entries">Go back to the entry list.</a> 
+        <a href="{% url 'entries:entry-detail' entry.pk %}">Go back to entry details</a> 
         <h2>Update the entry: {{ entry.fact }}</h2>
         <!-- 'action="."' below indicated where the form is submitted. '.' means current URL -->
         <form method="POST">

@@ -21,12 +21,12 @@
         </style>
     </head>
     <body>
-        <a href="/entries">Go back to the entry list.</a> 
+        <a href="{% url 'entries:entry-list' %}">Go back to the entry list</a> 
         <h1>This is the details of {{ entry.fact }} </h1>
         <p> Source: {{ entry.source }} || Credibility: {{ entry.credibility }}</p>
         <p> This entry was contributed by: {{ entry.user }}</p>
         </hr>
-        <a href="/entries/{{ entry.pk }}/update/">Update</a>
-        <a href="/entries/{{ entry.pk }}/delete/">Delete</a>
-    </body>
+        <a href="{% url 'entries:entry-update' entry.pk %}">Update</a>
+        <a href="{% url 'entries:entry-delete' entry.pk %}">Delete</a>
+    </body> 
 </html>

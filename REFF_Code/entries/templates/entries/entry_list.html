@@ -21,13 +21,13 @@
         </style>
     </head>
     <body>
-        <a href="/create">Create new entry</a>
+        <a href="{% url 'entries:entry-create' %}">Create new entry</a>
         <hr />
         <h1>These are all of our entries:</h1>
         {% for entry in entries %}
             <div class="entry">
-                <a href="/entries/{{ entry.pk }}/"> {{ entry.fact }} |</a> {{ entry.source }} | {{ entry.credibility }} 
-            </div>
+                <a href="{% url 'entries:entry-detail' entry.pk %}"> {{ entry.fact }} </a> | {{ entry.source }} | {{ entry.credibility }} 
+            </div> 
         {% endfor %}
     </body>
 </html>
