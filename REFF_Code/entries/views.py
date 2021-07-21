@@ -56,6 +56,10 @@ def entry_update(request, pk):
 
     return render(request, "entries/entry_update.html", context)
 
+def entry_delete(request, pk):
+    entry = Entry.objects.get(id=pk)
+    entry.delete()
+    return redirect("/entries")
 
 # Below we've got the form using the EntryForm as opposed to EntryModelForm
 # However, this version is lengthier. The one above abstracts more code.

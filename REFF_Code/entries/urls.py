@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from entries.views import entry_list, entry_detail, entry_create, entry_update
+from entries.views import entry_list, entry_detail, entry_create, entry_update, entry_delete
 
 app_name = "entries"
 
@@ -13,5 +13,6 @@ urlpatterns = [
     # containing primary keys (<pk>) at the bottom of the list;
     # or the primary key can be declared as <int: pk>
     path('entries/<int:pk>/', entry_detail),
-    path('entries/<int:pk>/update/', entry_update) 
+    path('entries/<int:pk>/update/', entry_update),
+    path('entries/<int:pk>/delete/', entry_delete) 
 ]
