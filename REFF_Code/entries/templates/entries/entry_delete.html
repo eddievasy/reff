@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+        <a href="{% url 'entries:entry-list' %}">Go back to the entry list</a> 
+        <hr />
+        <h2>Are you sure you want to delete entry {{ entry.fact }}</h2>
+        <!-- 'action="."' below indicated where the form is submitted. '.' means current URL -->
+        <form method="POST" action=".">
+            <!-- The csrf token below is good security implementation for form submission within Django -->
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit"> Submit </button>
+        </form>
+
+{% endblock content %}
+ 

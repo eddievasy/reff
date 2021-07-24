@@ -1,13 +1,27 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from entries.models import Entry, Contributor
 from entries.forms import EntryForm, EntryModelForm
+from django.views import generic # folder contains TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 
-# Create your views here.
+# Generally speaking, web pages follow the CRUD+L format: Create, Retrieve, Updated, Delete and List
 
+# Class view
+class LandingPageView(generic.TemplateView):
+    template_name = "landing.html"
+
+# Function view
 def landing_page(request):
     return render(request, "landing.html")
  
+# Class view
+class EntryListView(generic.ListView):
+    template_name="entries/entry_list.html"
+    queryset = Entry.objects.all()
+    # change the default name for the iterable list from 'object_list' to 'entries'
+    context_object_name = "entries"
+
+# Function view
 def entry_list(request):
     entries = Entry.objects.all()
     context = {
@@ -15,6 +29,13 @@ def entry_list(request):
     }
     return render(request, "entries/entry_list.html", context)
 
+# Class view
+class EntryDetailView(generic.DetailView):
+    template_name="entries/entry_detail.html"
+    queryset = Entry.objects.all()
+    context_object_name = "entry" 
+
+# Function view
 def entry_detail(request, pk):
     # Return the entry with id = pk
     entry = Entry.objects.get(id=pk)
@@ -23,6 +44,15 @@ def entry_detail(request, pk):
     }
     return render(request, "entries/entry_detail.html", context)
 
+# Class view
+class EntryCreateView(generic.CreateView):
+    template_name="entries/entry_create.html"
+    form_class = EntryModelForm
+
+    def get_success_url(self):
+        return reverse("entries:entry-list")
+
+# Function view
 def entry_create(request):
     # Generate empty form
     form = EntryModelForm()
@@ -42,7 +72,16 @@ def entry_create(request):
 
     return render(request, "entries/entry_create.html", context)
 
+# Class view
+class EntryUpdateView(generic.UpdateView):
+    template_name="entries/entry_update.html"
+    queryset = Entry.objects.all()
+    form_class = EntryModelForm
 
+    def get_success_url(self):
+        return reverse("entries:entry-list")
+
+# Function view
 def entry_update(request, pk):
     entry = Entry.objects.get(id=pk)
     form = EntryModelForm(instance=entry)
@@ -59,6 +98,16 @@ def entry_update(request, pk):
 
     return render(request, "entries/entry_update.html", context)
 
+
+# Class view
+class EntryDeleteView(generic.DeleteView):
+    template_name="entries/entry_delete.html"
+    queryset = Entry.objects.all()
+
+    def get_success_url(self):
+        return reverse("entries:entry-list")
+
+# Function view
 def entry_delete(request, pk):
     entry = Entry.objects.get(id=pk)
     entry.delete()
