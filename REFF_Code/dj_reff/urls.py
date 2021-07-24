@@ -16,11 +16,17 @@ Including another URLconf
 from entries.views import landing_page, LandingPageView
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LandingPageView.as_view(), name='landing-page'),
     # Change the URL .py folder from global to app-specific ('entries' in our case)
-    path('entries/', include('entries.urls',namespace="entries"))
+    path('entries/', include('entries.urls',namespace="entries")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
+ 
