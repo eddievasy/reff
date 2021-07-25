@@ -126,3 +126,7 @@ STATICFILES_DIRS = [
 STATIC_ROOT = "static_root"
 
 AUTH_USER_MODEL = 'entries.user'
+
+# Prints email to console
+# Needs to be configured for production
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"    

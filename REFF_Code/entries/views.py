@@ -1,3 +1,4 @@
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from entries.models import Entry, Contributor
@@ -20,6 +21,7 @@ class EntryListView(generic.ListView):
     queryset = Entry.objects.all()
     # change the default name for the iterable list from 'object_list' to 'entries'
     context_object_name = "entries"
+
 
 # Function view
 def entry_list(request):
@@ -51,6 +53,16 @@ class EntryCreateView(generic.CreateView):
 
     def get_success_url(self):
         return reverse("entries:entry-list")
+
+    def form_valid(self,form):
+        # TODO send email
+        send_mail(
+            subject="New entry has been created", 
+            message="Thanks for making contributing to the REFF database.",
+            from_email="test@test.com",
+            recipient_list=["test2@test.com"],
+        )
+        return super(EntryCreateView,self).form_valid(form)
 
 # Function view
 def entry_create(request):
