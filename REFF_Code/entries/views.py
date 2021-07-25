@@ -2,10 +2,18 @@ from django.core.mail import send_mail
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from entries.models import Entry, Contributor
-from entries.forms import EntryForm, EntryModelForm
+from entries.forms import EntryForm, EntryModelForm, CustomUserCreationForm
 from django.views import generic # folder contains TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 
 # Generally speaking, web pages follow the CRUD+L format: Create, Retrieve, Updated, Delete and List
+
+# Class view
+class SignupView(generic.CreateView):
+    template_name="registration/signup.html"
+    form_class = CustomUserCreationForm
+
+    def get_success_url(self):
+        return reverse("login")
 
 # Class view
 class LandingPageView(generic.TemplateView):
@@ -58,7 +66,7 @@ class EntryCreateView(generic.CreateView):
         # TODO send email
         send_mail(
             subject="New entry has been created", 
-            message="Thanks for making contributing to the REFF database.",
+            message="Thanks for contributing to the REFF database.",
             from_email="test@test.com",
             recipient_list=["test2@test.com"],
         )
