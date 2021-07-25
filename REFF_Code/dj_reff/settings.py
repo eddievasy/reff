@@ -130,3 +130,6 @@ AUTH_USER_MODEL = 'entries.user'
 # Prints email to console
 # Needs to be configured for production
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"    
+
+# Specify the login redirect URL
+LOGIN_REDIRECT_URL = '/entries'
