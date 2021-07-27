@@ -10,7 +10,9 @@ from django.db import models
 # users and the database, therefore we import:
 from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
+from django.db.models.signals import post_save # this signal listens for when the user is actually created in the DB
+
+
 
 # Inherit the AbstractUser and create our own class from it
 class User(AbstractUser):
@@ -20,7 +22,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return super.user.username
+        return self.user.username
 
 
 class Entry(models.Model):
@@ -55,3 +57,15 @@ class Contributor(models.Model):
 
     def __str__(self):
         return self.user.email
+
+def post_user_created_signal(sender, instance, created, **kwargs):
+    print('User created / modified: ',instance)
+    print('Was this user just created? ',created)
+    
+    # if the user was just created (therefore not modified)
+    if created:
+        UserProfile.objects.create(user=instance)
+
+
+# When a User is created, Django sends out a post_save signal which triggers the run of the 'post_user_created_signal' function
+post_save.connect(post_user_created_signal, sender=User)
