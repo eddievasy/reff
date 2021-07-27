@@ -133,3 +133,6 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Specify the login redirect URL
 LOGIN_REDIRECT_URL = '/entries'
+
+# This makes sure that the login redirects are taken to the appropriate URL
+LOGIN_URL = "/login"

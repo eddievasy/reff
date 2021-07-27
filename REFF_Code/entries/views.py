@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from entries.models import Entry, Contributor
 from entries.forms import EntryForm, EntryModelForm, CustomUserCreationForm
 from django.views import generic # folder contains TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin # we'll use this class to verify that the current user is authenticated
 
 # Generally speaking, web pages follow the CRUD+L format: Create, Retrieve, Updated, Delete and List
 
@@ -24,7 +25,8 @@ def landing_page(request):
     return render(request, "landing.html")
  
 # Class view
-class EntryListView(generic.ListView):
+# By also inheritting from LoginRequiredMixin, we restrict access to this particular view (it can only be called when the user is logged in)
+class EntryListView(LoginRequiredMixin,generic.ListView):
     template_name="entries/entry_list.html"
     queryset = Entry.objects.all()
     # change the default name for the iterable list from 'object_list' to 'entries'
@@ -40,6 +42,7 @@ def entry_list(request):
     return render(request, "entries/entry_list.html", context)
 
 # Class view
+# We won't restrict this view from being accessed by non-users because we want it to be accessible across the web
 class EntryDetailView(generic.DetailView):
     template_name="entries/entry_detail.html"
     queryset = Entry.objects.all()
@@ -55,7 +58,7 @@ def entry_detail(request, pk):
     return render(request, "entries/entry_detail.html", context)
 
 # Class view
-class EntryCreateView(generic.CreateView):
+class EntryCreateView(LoginRequiredMixin,generic.CreateView):
     template_name="entries/entry_create.html"
     form_class = EntryModelForm
 
@@ -93,7 +96,7 @@ def entry_create(request):
     return render(request, "entries/entry_create.html", context)
 
 # Class view
-class EntryUpdateView(generic.UpdateView):
+class EntryUpdateView(LoginRequiredMixin,generic.UpdateView):
     template_name="entries/entry_update.html"
     queryset = Entry.objects.all()
     form_class = EntryModelForm
@@ -120,7 +123,7 @@ def entry_update(request, pk):
 
 
 # Class view
-class EntryDeleteView(generic.DeleteView):
+class EntryDeleteView(LoginRequiredMixin,generic.DeleteView):
     template_name="entries/entry_delete.html"
     queryset = Entry.objects.all()
 

@@ -1,3 +1,9 @@
+# After making changes here, the following terminal commands are to be used:
+# python manage.py makemigrations
+# python manage.py migrate
+
+# python manage.py createsuperuser  --> to be used when the old DB is wiped out
+
 from django.db import models
 
 # We want to have a connection between our platform's 
@@ -9,6 +15,13 @@ from django.contrib.auth.models import AbstractUser
 # Inherit the AbstractUser and create our own class from it
 class User(AbstractUser):
     pass
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return super.user.username
+
 
 class Entry(models.Model):
     CATEGORY = (
@@ -38,6 +51,7 @@ class Contributor(models.Model):
     # there is one Contributor per User
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.CharField(max_length=100)
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.user.email
