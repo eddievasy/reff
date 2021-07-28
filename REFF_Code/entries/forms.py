@@ -9,6 +9,8 @@ from django.contrib.auth.forms import UserCreationForm, UsernameField
 User = get_user_model()
 
 # The following is a more compact way of using forms within Django
+
+
 class EntryModelForm(forms.ModelForm):
     class Meta:
         # Specify which model we're using
@@ -24,6 +26,8 @@ class EntryModelForm(forms.ModelForm):
 
 # The below form is the more comprehensive way of using forms in Django;
 # It is good for understanding the behind the scenes workings.
+
+
 class EntryForm(forms.Form):
 
     fact = forms.CharField()
@@ -32,8 +36,10 @@ class EntryForm(forms.Form):
     category = forms.CharField(max_length=100)
 
 # Create a custom user creation form where we use our own type of 'user' as opposed to Django's default one
+
+
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ("username",)
+        fields = ('first_name', 'last_name', 'username', 'email')
         field_classes = {'username': UsernameField}
