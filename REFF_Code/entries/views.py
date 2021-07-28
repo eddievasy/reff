@@ -3,31 +3,41 @@ from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from entries.models import Entry, Contributor
 from entries.forms import EntryForm, EntryModelForm, CustomUserCreationForm
-from django.views import generic # folder contains TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin # we'll use this class to verify that the current user is authenticated
+# folder contains TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views import generic
+# we'll use this class to verify that the current user is authenticated
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Generally speaking, web pages follow the CRUD+L format: Create, Retrieve, Updated, Delete and List
 
 # Class view
+
+
 class SignupView(generic.CreateView):
-    template_name="registration/signup.html"
+    template_name = "registration/signup.html"
     form_class = CustomUserCreationForm
 
     def get_success_url(self):
         return reverse("login")
 
 # Class view
+
+
 class LandingPageView(generic.TemplateView):
     template_name = "landing.html"
 
 # Function view
+
+
 def landing_page(request):
     return render(request, "landing.html")
- 
+
 # Class view
 # By also inheritting from LoginRequiredMixin, we restrict access to this particular view (it can only be called when the user is logged in)
-class EntryListView(LoginRequiredMixin,generic.ListView):
-    template_name="entries/entry_list.html"
+
+
+class EntryListView(LoginRequiredMixin, generic.ListView):
+    template_name = "entries/entry_list.html"
     queryset = Entry.objects.all()
     # change the default name for the iterable list from 'object_list' to 'entries'
     context_object_name = "entries"
@@ -41,14 +51,28 @@ def entry_list(request):
     }
     return render(request, "entries/entry_list.html", context)
 
+class MyEntryListView(LoginRequiredMixin, generic.ListView):
+    template_name = "entries/my_entry_list.html"
+
+    # Filter the query set so we only display the entries of the current user
+    def get_queryset(self):
+        entry_user = self.request.user
+        return Entry.objects.filter(user=entry_user)
+    # change the default name for the iterable list from 'object_list' to 'entries'
+    context_object_name = "entries"
+
 # Class view
 # We won't restrict this view from being accessed by non-users because we want it to be accessible across the web
+
+
 class EntryDetailView(generic.DetailView):
-    template_name="entries/entry_detail.html"
+    template_name = "entries/entry_detail.html"
     queryset = Entry.objects.all()
-    context_object_name = "entry" 
+    context_object_name = "entry"
 
 # Function view
+
+
 def entry_detail(request, pk):
     # Return the entry with id = pk
     entry = Entry.objects.get(id=pk)
@@ -58,29 +82,33 @@ def entry_detail(request, pk):
     return render(request, "entries/entry_detail.html", context)
 
 # Class view
-class EntryCreateView(LoginRequiredMixin,generic.CreateView):
-    template_name="entries/entry_create.html"
+
+
+class EntryCreateView(LoginRequiredMixin, generic.CreateView):
+    template_name = "entries/entry_create.html"
     form_class = EntryModelForm
 
     def get_success_url(self):
         return reverse("entries:entry-list")
 
-    def form_valid(self,form):
+    def form_valid(self, form):
         # TODO send email
         send_mail(
-            subject="New entry has been created", 
+            subject="New entry has been created",
             message="Thanks for contributing to the REFF database.",
             from_email="test@test.com",
             recipient_list=["test2@test.com"],
         )
-        return super(EntryCreateView,self).form_valid(form)
+        return super(EntryCreateView, self).form_valid(form)
 
 # Function view
+
+
 def entry_create(request):
     # Generate empty form
     form = EntryModelForm()
     # If the request is of type 'POST'
-    if request.method=="POST":
+    if request.method == "POST":
         print('Receiving a post request.')
         form = EntryModelForm(request.POST)
         # Check to see that the form is valid
@@ -89,15 +117,17 @@ def entry_create(request):
             form.save()
             return redirect("/entries")
 
-    context= {
+    context = {
         "form": form
     }
 
     return render(request, "entries/entry_create.html", context)
 
 # Class view
-class EntryUpdateView(LoginRequiredMixin,generic.UpdateView):
-    template_name="entries/entry_update.html"
+
+
+class EntryUpdateView(LoginRequiredMixin, generic.UpdateView):
+    template_name = "entries/entry_update.html"
     queryset = Entry.objects.all()
     form_class = EntryModelForm
 
@@ -105,6 +135,8 @@ class EntryUpdateView(LoginRequiredMixin,generic.UpdateView):
         return reverse("entries:entry-list")
 
 # Function view
+
+
 def entry_update(request, pk):
     entry = Entry.objects.get(id=pk)
     form = EntryModelForm(instance=entry)
@@ -113,7 +145,7 @@ def entry_update(request, pk):
         if form.is_valid():
             form.save()
             return redirect("/entries")
-     
+
     context = {
         "form": form,
         "entry": entry
@@ -123,14 +155,16 @@ def entry_update(request, pk):
 
 
 # Class view
-class EntryDeleteView(LoginRequiredMixin,generic.DeleteView):
-    template_name="entries/entry_delete.html"
+class EntryDeleteView(LoginRequiredMixin, generic.DeleteView):
+    template_name = "entries/entry_delete.html"
     queryset = Entry.objects.all()
 
     def get_success_url(self):
         return reverse("entries:entry-list")
 
 # Function view
+
+
 def entry_delete(request, pk):
     entry = Entry.objects.get(id=pk)
     entry.delete()

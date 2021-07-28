@@ -15,14 +15,16 @@ class EntryModelForm(forms.ModelForm):
     class Meta:
         # Specify which model we're using
         model = Entry
+        
         # Specify the fields we want to use in the form
         fields = (
             'fact',
             'source',
             'credibility',
             'category',
-            'user',
+            'user'
         )
+        
 
 # The below form is the more comprehensive way of using forms in Django;
 # It is good for understanding the behind the scenes workings.
