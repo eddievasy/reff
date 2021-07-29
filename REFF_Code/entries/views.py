@@ -51,6 +51,7 @@ def entry_list(request):
     }
     return render(request, "entries/entry_list.html", context)
 
+
 class MyEntryListView(LoginRequiredMixin, generic.ListView):
     template_name = "entries/my_entry_list.html"
 
@@ -92,7 +93,11 @@ class EntryCreateView(LoginRequiredMixin, generic.CreateView):
         return reverse("entries:entry-list")
 
     def form_valid(self, form):
-        # TODO send email
+        # Assign the current logged in user to the entry
+        entry = form.save(commit=False)
+        entry.user = self.request.user
+        entry.save()
+
         send_mail(
             subject="New entry has been created",
             message="Thanks for contributing to the REFF database.",

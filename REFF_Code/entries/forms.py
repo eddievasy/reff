@@ -22,7 +22,6 @@ class EntryModelForm(forms.ModelForm):
             'source',
             'credibility',
             'category',
-            'user'
         )
         
 
