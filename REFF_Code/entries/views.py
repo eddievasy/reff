@@ -102,7 +102,7 @@ class EntryCreateView(LoginRequiredMixin, generic.CreateView):
             subject="New entry has been created",
             message="Thanks for contributing to the REFF database.",
             from_email="test@test.com",
-            recipient_list=["test2@test.com"],
+            recipient_list=[entry.user.email],
         )
         return super(EntryCreateView, self).form_valid(form)
 
