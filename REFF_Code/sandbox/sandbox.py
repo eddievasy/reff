@@ -1,7 +1,5 @@
-# This file is strictly used for testing purposes
+from django.utils import timezone
+from django.db import models
 
-def divider(a,b,c):
-    return a/b*c
-
-print(divider(100,5,2))
-print(divider(100,c=2,b=5))
+date_generated = models.DateTimeField(default=timezone.now)
+print(str(date_generated))

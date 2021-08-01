@@ -1,7 +1,7 @@
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
-from entries.models import Entry, Contributor
+from entries.models import Entry
 from entries.forms import EntryForm, EntryModelForm, CustomUserCreationForm
 # folder contains TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views import generic

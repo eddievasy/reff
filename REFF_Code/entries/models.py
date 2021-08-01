@@ -19,23 +19,24 @@ class User(AbstractUser):
     pass
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.user.username
-
-
 class Entry(models.Model):
     CATEGORY = (
-        ('Technology', 'Technology'),
-        ('Nutrition', 'Nutrition'),
-        ('Politics', 'Politics')
-        # To add more
+        # The first element in each tuple is the actual value to be set on the model, and the second element is the human-readable name;
+        # We'll be using the same naming convention for both;
+        ('Tech', 'Tech'),
+        ('Health', 'Health'),
+        ('Politics', 'Politics'),
+        ('History', 'History'),
+        ('Education', 'Education'),
+        ('Sports', 'Sports'),
+        ('Business', 'Business'),
+        ('Science', 'Science'),
+        ('Other', 'Other')
     )
 
     fact = models.CharField(max_length=50)
-    source = models.URLField()
+    # URLField() has a URL identifier which makes sure the entry is of format ['http', 'https', 'ftp', 'ftps']
+    source = models.URLField(max_length=300)
     credibility = models.FloatField()
     category = models.CharField(choices=CATEGORY, max_length=100)
 
@@ -49,25 +50,43 @@ class Entry(models.Model):
         return self.fact
 
 
-class Contributor(models.Model):
-    # We user OneToOneField instead of ForeignKey so that
-    # there is one Contributor per User
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bio = models.CharField(max_length=100)
-    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+class Review(models.Model):
+    rating = models.FloatField()
+    comment = models.CharField(max_length=250)
+
+    entry = models.ForeignKey("Entry", on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
-        return self.user.email
+        return str(self.rating)
 
 
-def post_user_created_signal(sender, instance, created, **kwargs):
-    print('User created / modified: ', instance)
-    print('Was this user just created? ', created)
+# Not relevant anymore:
+# class UserProfile(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    # if the user was just created (therefore not modified)
-    if created:
-        UserProfile.objects.create(user=instance)
+#     def __str__(self):
+#         return self.user.username
 
+# Not relevant anymore:
+# class Contributor(models.Model):
+#     # We user OneToOneField instead of ForeignKey so that
+#     # there is one Contributor per User
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     bio = models.CharField(max_length=100)
+#     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
-# When a User is created, Django sends out a post_save signal which triggers the run of the 'post_user_created_signal' function
-post_save.connect(post_user_created_signal, sender=User)
+#     def __str__(self):
+#         return self.user.email
+
+# We got rid of the UserProfile model so the following code is not relevant anymore
+# def post_user_created_signal(sender, instance, created, **kwargs):
+#     print('User created / modified: ', instance)
+#     print('Was this user just created? ', created)
+
+#     # if the user was just created (therefore not modified)
+#     if created:
+#         UserProfile.objects.create(user=instance)
+
+# # When a User is created, Django sends out a post_save signal which triggers the run of the 'post_user_created_signal' function
+# post_save.connect(post_user_created_signal, sender=User)
