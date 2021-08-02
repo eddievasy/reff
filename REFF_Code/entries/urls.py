@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from entries.views import entry_list, entry_detail, entry_create, entry_update, entry_delete, EntryListView, EntryDetailView, EntryCreateView, EntryUpdateView, EntryDeleteView, MyEntryListView
+from entries.views import entry_list, entry_detail, entry_create, entry_update, entry_delete, EntryListView, EntryDetailView, EntryCreateView, EntryUpdateView, EntryDeleteView, MyEntryListView, EntryListByCategoryView, MyEntryListByCategoryView
 
 app_name = "entries"
 
@@ -15,6 +15,8 @@ urlpatterns = [
     # containing primary keys (<pk>) at the bottom of the list;
     # or the primary key can be declared as <int: pk>
     path('<int:pk>/', EntryDetailView.as_view(), name='entry-detail'),
-    path('<int:pk>/update/', EntryUpdateView.as_view(), name='entry-update'),
-    path('<int:pk>/delete/', EntryDeleteView.as_view() , name='entry-delete') 
+    path('update-<int:pk>/', EntryUpdateView.as_view(), name='entry-update'),
+    path('delete-<int:pk>/', EntryDeleteView.as_view() , name='entry-delete'),
+    path('category-<str:category>/', EntryListByCategoryView.as_view(), name='entry-list-by-category'),
+    path('mine/<str:category>/', MyEntryListByCategoryView.as_view(), name='my-entry-list-by-category')
 ] 

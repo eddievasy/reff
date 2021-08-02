@@ -32,16 +32,37 @@ class LandingPageView(generic.TemplateView):
 def landing_page(request):
     return render(request, "landing.html")
 
+
 # Class view
 # By also inheritting from LoginRequiredMixin, we restrict access to this particular view (it can only be called when the user is logged in)
-
-
 class EntryListView(LoginRequiredMixin, generic.ListView):
     template_name = "entries/entry_list.html"
     queryset = Entry.objects.all()
     # change the default name for the iterable list from 'object_list' to 'entries'
     context_object_name = "entries"
 
+# Class View
+class EntryListByCategoryView(LoginRequiredMixin, generic.ListView):
+    template_name = "entries/entry_list.html"
+    
+    def get_queryset(self):
+        category=self.kwargs['category']
+        return Entry.objects.filter(category=category)
+    
+    # change the default name for the iterable list from 'object_list' to 'entries'
+    context_object_name = "entries"
+    
+# Class View
+class MyEntryListByCategoryView(LoginRequiredMixin, generic.ListView):
+    template_name = "entries/entry_list.html"
+    
+    def get_queryset(self):
+        entry_user = self.request.user
+        category=self.kwargs['category']
+        return Entry.objects.filter(user=entry_user,category=category)
+    
+    # change the default name for the iterable list from 'object_list' to 'entries'
+    context_object_name = "entries"
 
 # Function view
 def entry_list(request):
@@ -53,7 +74,7 @@ def entry_list(request):
 
 
 class MyEntryListView(LoginRequiredMixin, generic.ListView):
-    template_name = "entries/my_entry_list.html"
+    template_name = "entries/entry_list.html"
 
     # Filter the query set so we only display the entries of the current user
     def get_queryset(self):
