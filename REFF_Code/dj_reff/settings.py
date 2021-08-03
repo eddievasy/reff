@@ -37,6 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Third party apps
+    'crispy_forms',  
+    'crispy_tailwind',
+
+    # Local apps
     'entries'
 ]
 
@@ -56,7 +61,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # Create custom 'templates' folder and declare it in 'DIRS'
-        'DIRS': [ BASE_DIR / "templates" ],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -129,10 +134,14 @@ AUTH_USER_MODEL = 'entries.user'
 
 # Prints email to console
 # Needs to be configured for production
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"    
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Specify the login redirect URL
 LOGIN_REDIRECT_URL = '/entries'
 
 # This makes sure that the login redirects are taken to the appropriate URL
 LOGIN_URL = "/login"
+
+# The following tell the Crispy Forms app to use the Tailwind package (which has also been installed via pip)
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+CRISPY_TEMPLATE_PACK = "tailwind"

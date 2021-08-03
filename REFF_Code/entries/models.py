@@ -34,11 +34,12 @@ class Entry(models.Model):
         ('Other', 'Other')
     )
 
-    fact = models.CharField(max_length=50)
+    fact = models.CharField(max_length=300)
     # URLField() has a URL identifier which makes sure the entry is of format ['http', 'https', 'ftp', 'ftps']
     source = models.URLField(max_length=300)
     short_url=models.CharField(max_length=7, null=True, unique=True)
     category = models.CharField(choices=CATEGORY, max_length=100)
+    date_created = models.DateTimeField(auto_now_add=True)
 
     # Foreign Keys relationships
     user = models.ForeignKey("User", on_delete=models.CASCADE)
@@ -55,7 +56,7 @@ class Review(models.Model):
     comment = models.CharField(max_length=250)
 
     entry = models.ForeignKey("Entry", on_delete=models.CASCADE)
-    date_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.rating)
