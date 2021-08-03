@@ -37,7 +37,7 @@ class Entry(models.Model):
     fact = models.CharField(max_length=50)
     # URLField() has a URL identifier which makes sure the entry is of format ['http', 'https', 'ftp', 'ftps']
     source = models.URLField(max_length=300)
-    credibility = models.FloatField()
+    short_url=models.CharField(max_length=7, null=True, unique=True)
     category = models.CharField(choices=CATEGORY, max_length=100)
 
     # Foreign Keys relationships

@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from entries.views import EntryDetailShortURLView
 
 
 urlpatterns = [
@@ -34,6 +35,7 @@ urlpatterns = [
     # the following path needs to specify the uid in base64 and the token for a successful password reset
     path('password-confirm-done/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('password-reset-complete/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('<str:short_url>/', EntryDetailShortURLView.as_view(), name='entry-detail-short-url')
 ]
 
 if settings.DEBUG:

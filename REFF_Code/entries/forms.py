@@ -20,7 +20,6 @@ class EntryModelForm(forms.ModelForm):
         fields = (
             'fact',
             'source',
-            'credibility',
             'category',
         )
         
@@ -33,7 +32,6 @@ class EntryForm(forms.Form):
 
     fact = forms.CharField()
     source = forms.URLField()
-    credibility = forms.FloatField()
     category = forms.CharField(max_length=100)
 
 # Create a custom user creation form where we use our own type of 'user' as opposed to Django's default one

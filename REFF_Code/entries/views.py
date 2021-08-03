@@ -8,6 +8,9 @@ from django.views import generic
 # we'll use this class to verify that the current user is authenticated
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+# Use custom url_generator to assign to each new entry
+from algorithms.random_url_string import url_generator
+
 # Generally speaking, web pages follow the CRUD+L format: Create, Retrieve, Updated, Delete and List
 
 # Class view
@@ -42,29 +45,35 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
     context_object_name = "entries"
 
 # Class View
+
+
 class EntryListByCategoryView(LoginRequiredMixin, generic.ListView):
     template_name = "entries/entry_list.html"
-    
+
     def get_queryset(self):
-        category=self.kwargs['category']
+        category = self.kwargs['category']
         return Entry.objects.filter(category=category)
-    
+
     # change the default name for the iterable list from 'object_list' to 'entries'
     context_object_name = "entries"
-    
+
 # Class View
+
+
 class MyEntryListByCategoryView(LoginRequiredMixin, generic.ListView):
     template_name = "entries/entry_list.html"
-    
+
     def get_queryset(self):
         entry_user = self.request.user
-        category=self.kwargs['category']
-        return Entry.objects.filter(user=entry_user,category=category)
-    
+        category = self.kwargs['category']
+        return Entry.objects.filter(user=entry_user, category=category)
+
     # change the default name for the iterable list from 'object_list' to 'entries'
     context_object_name = "entries"
 
 # Function view
+
+
 def entry_list(request):
     entries = Entry.objects.all()
     context = {
@@ -92,6 +101,21 @@ class EntryDetailView(generic.DetailView):
     queryset = Entry.objects.all()
     context_object_name = "entry"
 
+# Class view
+
+
+class EntryDetailShortURLView(generic.DetailView):
+    template_name = "entries/entry_detail.html"
+    
+    # return the Entry which has the corresponding short URL
+    def get_object(self, queryset=None):
+        short_url = self.kwargs['short_url']
+        entry = Entry.objects.get(short_url=short_url)
+        return entry
+        
+    
+    context_object_name = "entry"
+
 # Function view
 
 
@@ -117,6 +141,17 @@ class EntryCreateView(LoginRequiredMixin, generic.CreateView):
         # Assign the current logged in user to the entry
         entry = form.save(commit=False)
         entry.user = self.request.user
+        # Generate random short URL
+        random_short_url = url_generator()
+        # Check if the random short URL already exists in the DB for another entry
+        identical_urls = Entry.objects.filter(
+            short_url=random_short_url).count()
+        # print('>>>>> Number of idential short URLs =',identical_urls)
+        # If it already exists, re-generate it
+        if(identical_urls > 0):
+            random_short_url = url_generator()
+        # Assign short URL to the new entry
+        entry.short_url = random_short_url
         entry.save()
 
         send_mail(
