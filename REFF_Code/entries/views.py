@@ -29,6 +29,12 @@ class SignupView(generic.CreateView):
 class LandingPageView(generic.TemplateView):
     template_name = "landing.html"
 
+# Class view
+
+
+class TestingView(generic.TemplateView):
+    template_name = "entries/testing.html"
+
 # Function view
 
 
@@ -106,14 +112,13 @@ class EntryDetailView(generic.DetailView):
 
 class EntryDetailShortURLView(generic.DetailView):
     template_name = "entries/entry_detail.html"
-    
+
     # return the Entry which has the corresponding short URL
     def get_object(self, queryset=None):
         short_url = self.kwargs['short_url']
         entry = Entry.objects.get(short_url=short_url)
         return entry
-        
-    
+
     context_object_name = "entry"
 
 # Function view
