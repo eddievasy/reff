@@ -9,7 +9,8 @@ urlpatterns = [
     # about a ripple effect taking place when changing the path URL below.
     path('', EntryListView.as_view(), name='entry-list'),
     path('create/', EntryCreateView.as_view(), name='entry-create'),
-    path('mine/', MyEntryListView.as_view(), name='my-entry-list'),
+    # the path below has been implemented through the entry-list path using '?param=xXx' parameters instead
+    # path('mine/', MyEntryListView.as_view(), name='my-entry-list'),
     # the '<>' syntax is used when generating dynamic URLs;
     # it is also recommended to keep the URL paths
     # containing primary keys (<pk>) at the bottom of the list;
@@ -17,6 +18,7 @@ urlpatterns = [
     path('<int:pk>/', EntryDetailView.as_view(), name='entry-detail'),
     path('update-<int:pk>/', EntryUpdateView.as_view(), name='entry-update'),
     path('delete-<int:pk>/', EntryDeleteView.as_view() , name='entry-delete'),
-    path('category-<str:category>/', EntryListByCategoryView.as_view(), name='entry-list-by-category'),
-    path('mine/<str:category>/', MyEntryListByCategoryView.as_view(), name='my-entry-list-by-category')
+    # the paths below have been implemented through the entry-list path using '?param=xXx' parameters instead
+    # path('category-<str:category>/', EntryListByCategoryView.as_view(), name='entry-list-by-category'),
+    # path('mine/<str:category>/', MyEntryListByCategoryView.as_view(), name='my-entry-list-by-category')
 ] 

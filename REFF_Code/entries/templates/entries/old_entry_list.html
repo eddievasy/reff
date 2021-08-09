@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="text-gray-600 body-font">
+  <div class="container px-5 py-10 mx-auto flex flex-wrap">
+    <div class="mb-6 py-6 flex justify-between items-center border-b border-gray-200 w-full">
+      <div>
+        <h1 class="text-4xl text-gray-800">Entries</h1>
+      </div>
+      <div>
+        <a class="w-full bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md text-white" href="{% url 'entries:entry-create' %}">Create new entry</a>
+      </div>
+    </div>
+
+    <div class="container py-2 mx-auto flex flex-wrap">
+      <ul class="inline-flex items-center list-none">
+        <li>
+          <a href="{% url 'entries:entry-list-by-category' category='Tech' %}"
+            class="px-4 py-1 mr-1 text-base text-blueGray-500 transition duration-500 ease-in-out transform rounded-md focus:shadow-outline focus:outline-none focus:ring-2 ring-offset-current ring-offset-2 hover:text-black ">Tech</a>
+        </li>
+        <li>
+          <a href="{% url 'entries:entry-list-by-category' category='Health' %}"
+            class="px-4 py-1 mr-1 text-base text-blueGray-500 transition duration-500 ease-in-out transform rounded-md focus:shadow-outline focus:outline-none focus:ring-2 ring-offset-current ring-offset-2 hover:text-black ">Health</a>
+        </li>
+        <li>
+          <a href="{% url 'entries:entry-list-by-category' category='Sports' %}"
+            class="px-4 py-1 mr-1 text-base text-blueGray-500 transition duration-500 ease-in-out transform rounded-md focus:shadow-outline focus:outline-none focus:ring-2 ring-offset-current ring-offset-2 hover:text-black ">Sports</a>
+        </li>
+        <li>
+          <a href="{% url 'entries:entry-list-by-category' category='Education' %}"
+            class="px-4 py-1 mr-1 text-base text-blueGray-500 transition duration-500 ease-in-out transform rounded-md focus:shadow-outline focus:outline-none focus:ring-2 ring-offset-current ring-offset-2 hover:text-black ">Education</a>
+        </li>
+        <li>
+          <a href="{% url 'entries:entry-list-by-category' category='Business' %}"
+            class="px-4 py-1 mr-1 text-base text-blueGray-500 transition duration-500 ease-in-out transform rounded-md focus:shadow-outline focus:outline-none focus:ring-2 ring-offset-current ring-offset-2 hover:text-black ">Business</a>
+        </li>
+        <li>
+          <a href="{% url 'entries:entry-list-by-category' category='Science' %}"
+            class="px-4 py-1 mr-1 text-base text-blueGray-500 transition duration-500 ease-in-out transform rounded-md focus:shadow-outline focus:outline-none focus:ring-2 ring-offset-current ring-offset-2 hover:text-black ">Science</a>
+        </li>
+        <li>
+          <a href="{% url 'entries:entry-list-by-category' category='Politics' %}"
+            class="px-4 py-1 mr-1 text-base text-blueGray-500 transition duration-500 ease-in-out transform rounded-md focus:shadow-outline focus:outline-none focus:ring-2 ring-offset-current ring-offset-2 hover:text-black ">Politics</a>
+        </li>
+        <li>
+          <a href="{% url 'entries:entry-list-by-category' category='History' %}"
+            class="px-4 py-1 mr-1 text-base text-blueGray-500 transition duration-500 ease-in-out transform rounded-md focus:shadow-outline focus:outline-none focus:ring-2 ring-offset-current ring-offset-2 hover:text-black ">History</a>
+        </li>
+        <li>
+          <a href="{% url 'entries:entry-list-by-category' category='Other' %}"
+            class="px-4 py-1 mr-1 text-base text-blueGray-500 transition duration-500 ease-in-out transform rounded-md focus:shadow-outline focus:outline-none focus:ring-2 ring-offset-current ring-offset-2 hover:text-black ">Other</a>
+        </li>
+      </ul>
+    </div>
+  
+
+    <div class="flex flex-wrap -m-4 py-10">
+      {% for entry in object_list %}
+      <div class="p-4 lg:w-1/2 md:w-full">
+        <div class="flex border-2 rounded-lg border-gray-200 border-opacity-50 p-8 sm:flex-row flex-col">
+          <div
+            class="w-16 h-16 sm:mr-8 sm:mb-0 mb-4 inline-flex items-center justify-center rounded-full bg-blue-100 text-blue-500 flex-shrink-0">
+            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              class="w-8 h-8" viewBox="0 0 24 24">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </div>
+          <div class="flex-grow truncate">
+            <h2 class="text-gray-900 text-lg title-font font-medium mb-3">{{ entry.source }} : 0
+            </h2>
+            <p class="leading-relaxed text-base">{{ entry.fact }}</p>
+            <a href="{% url 'entry-detail-short-url' entry.short_url %}" class="mt-3 text-blue-500 inline-flex items-center">View
+              details
+              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                class="w-4 h-4 ml-2" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock content %}

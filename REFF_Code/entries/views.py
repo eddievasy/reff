@@ -14,7 +14,6 @@ from algorithms.random_url_string import url_generator
 # We'll use these classes to paginate a higher number of entries that are to be displayed
 from django.core.paginator import Paginator, EmptyPage
 
-import json
 
 # Generally speaking, web pages follow the CRUD+L format: Create, Retrieve, Updated, Delete and List
 
@@ -40,42 +39,34 @@ class LandingPageView(generic.TemplateView):
 class TestingView(generic.TemplateView):
     template_name = "entries/testing.html"
 
-# Function view
-
-
-def landing_page(request):
-    return render(request, "landing.html")
-
 
 # Class view
 # By also inheritting from LoginRequiredMixin, we restrict access to this particular view (it can only be called when the user is logged in)
 class EntryListView(LoginRequiredMixin, generic.ListView):
-    template_name = "entries/testing_2.html"
+    template_name = "entries/entry_list.html"
     # Declare the number of entries per page
     paginate_by = 10
     # # Order entries by date_created (the '-' means last added first)
     # queryset = Entry.objects.all().order_by('-date_created')
-    
+
     def get_queryset(self):
         # print(self.request.GET)
         # Order entries by date_created (the '-' means last added first)
         entries = Entry.objects.all().order_by('-date_created')
         if 'category' in self.request.GET.keys():
-            category=self.request.GET['category']
+            category = self.request.GET['category']
             # if the category is different to 'all' apply another filter to the entries
-            if (category!='all'):
+            if (category != 'all'):
                 entries = entries.filter(category=category)
         # Filter the queryset in order to display entries created by the user logged in
         if 'by_me' in self.request.GET.keys():
-            by_me=self.request.GET['by_me']
-            if by_me=='true':
+            by_me = self.request.GET['by_me']
+            if by_me == 'true':
                 entry_user = self.request.user
-                entries=entries.filter(user=entry_user)
-            
+                entries = entries.filter(user=entry_user)
+
         return entries
-        
-    
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # default value for category
@@ -84,60 +75,21 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
         if 'category' in self.request.GET.keys():
             category = self.request.GET['category']
         # add category to context
-        context['category']=category
+        context['category'] = category
         # add number of entries to context
         context["num_entries"] = len(self.get_queryset())
         print(self.request.GET)
         # print('LENGTH ' + str(len(self.get_queryset())))
         # default value for by_me is 'false'
-        by_me='false'
-        if 'by_me' in self.request.GET.keys() and self.request.GET['by_me']=='true':
-            by_me='true'
-            
-        context['by_me']=by_me
-        
+        by_me = 'false'
+        if 'by_me' in self.request.GET.keys() and self.request.GET['by_me'] == 'true':
+            by_me = 'true'
+
+        context['by_me'] = by_me
+        print(context)
+
         return context
-    
 
-
-# Class View
-
-class EntryListByCategoryView(LoginRequiredMixin, generic.ListView):
-    template_name = "entries/testing.html"
-
-    def get_queryset(self):
-        category = self.kwargs['category']
-        return Entry.objects.filter(category=category)
-
-    # change the default name for the iterable list from 'object_list' to 'entries'
-    context_object_name = "entries"
-
-# Class View
-
-
-class MyEntryListByCategoryView(LoginRequiredMixin, generic.ListView):
-    template_name = "entries/entry_list.html"
-
-    def get_queryset(self):
-        entry_user = self.request.user
-        category = self.kwargs['category']
-        return Entry.objects.filter(user=entry_user, category=category)
-
-    # change the default name for the iterable list from 'object_list' to 'entries'
-    context_object_name = "entries"
-
-# Function view
-
-
-class MyEntryListView(LoginRequiredMixin, generic.ListView):
-    template_name = "entries/entry_list.html"
-
-    # Filter the query set so we only display the entries of the current user
-    def get_queryset(self):
-        entry_user = self.request.user
-        return Entry.objects.filter(user=entry_user)
-    # change the default name for the iterable list from 'object_list' to 'entries'
-    context_object_name = "entries"
 
 # Class view
 # We won't restrict this view from being accessed by non-users because we want it to be accessible across the web
@@ -162,19 +114,8 @@ class EntryDetailShortURLView(generic.DetailView):
 
     context_object_name = "entry"
 
-# Function view
-
-
-def entry_detail(request, pk):
-    # Return the entry with id = pk
-    entry = Entry.objects.get(id=pk)
-    context = {
-        "entry": entry
-    }
-    return render(request, "entries/entry_detail.html", context)
 
 # Class view
-
 
 class EntryCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = "entries/entry_create.html"
@@ -208,6 +149,133 @@ class EntryCreateView(LoginRequiredMixin, generic.CreateView):
         )
         return super(EntryCreateView, self).form_valid(form)
 
+
+# Class view
+
+
+class EntryUpdateView(LoginRequiredMixin, generic.UpdateView):
+    template_name = "entries/entry_update.html"
+    queryset = Entry.objects.all()
+    form_class = EntryModelForm
+
+    def get_success_url(self):
+        return reverse("entries:entry-list")
+
+
+# Class view
+class EntryDeleteView(LoginRequiredMixin, generic.DeleteView):
+    template_name = "entries/entry_delete.html"
+    queryset = Entry.objects.all()
+
+    def get_success_url(self):
+        return reverse("entries:entry-list")
+
+
+##############################################
+############ DEPRECATED CODE #################
+##############################################
+
+# Class View
+
+
+class MyEntryListByCategoryView(LoginRequiredMixin, generic.ListView):
+    template_name = "entries/entry_list.html"
+
+    def get_queryset(self):
+        entry_user = self.request.user
+        category = self.kwargs['category']
+        return Entry.objects.filter(user=entry_user, category=category)
+
+    # change the default name for the iterable list from 'object_list' to 'entries'
+    context_object_name = "entries"
+
+# Class view
+
+
+class MyEntryListView(LoginRequiredMixin, generic.ListView):
+    template_name = "entries/entry_list.html"
+
+    # Filter the query set so we only display the entries of the current user
+    def get_queryset(self):
+        entry_user = self.request.user
+        return Entry.objects.filter(user=entry_user)
+    # change the default name for the iterable list from 'object_list' to 'entries'
+    context_object_name = "entries"
+
+# Function view
+
+
+def entry_list(request):
+    # Order entries by date_created (the '-' means last added first)
+    entries = Entry.objects.all().order_by('-date_created')
+    # default value of 'category'
+    category = 'all'
+    print(request.GET.keys())
+
+    # if 'category' is passed as a '?category=xXx' parameter to the URL
+    if 'category' in request.GET.keys():
+        category = request.GET['category']
+        # if the category is different to 'all' apply another filter to the entries
+        if (category != 'all'):
+            entries = entries.filter(category=category)
+
+    # Create the paginator, and define the number of entries per page
+    p = Paginator(entries, 4)
+    num_pages = p.num_pages
+
+    # get the page_num from the request;
+    # if the request dictionary does not contain 'page', use page 1 as default
+    page_num = request.GET.get('page', 1)
+
+    # print('Current page: ', page_num)
+    # print('Total number of pages: ',p.num_pages)
+    # print('Number of entries: ',len(entries))
+
+    # if a user tries to access a page that doesn't exist, take them to page 1;
+    try:
+        page = p.page(page_num)
+    except EmptyPage:
+        page = p.page(1)
+
+    entry_number = len(entries)
+    print(entry_number)
+
+    context = {
+        "entries": page,
+        "num_pages": num_pages,
+        "page_num": page_num,
+        "entry_number": entry_number,
+        "category": category
+    }
+    return render(request, "entries/testing.html", context)
+
+# Function view
+
+
+def entry_delete(request, pk):
+    entry = Entry.objects.get(id=pk)
+    entry.delete()
+    return redirect("/entries")
+
+# Function view
+
+
+def entry_update(request, pk):
+    entry = Entry.objects.get(id=pk)
+    form = EntryModelForm(instance=entry)
+    if request.method == "POST":
+        form = EntryModelForm(request.POST, instance=entry)
+        if form.is_valid():
+            form.save()
+            return redirect("/entries")
+
+    context = {
+        "form": form,
+        "entry": entry
+    }
+
+    return render(request, "entries/entry_update.html", context)
+
 # Function view
 
 
@@ -230,104 +298,35 @@ def entry_create(request):
 
     return render(request, "entries/entry_create.html", context)
 
-# Class view
-
-
-class EntryUpdateView(LoginRequiredMixin, generic.UpdateView):
-    template_name = "entries/entry_update.html"
-    queryset = Entry.objects.all()
-    form_class = EntryModelForm
-
-    def get_success_url(self):
-        return reverse("entries:entry-list")
-
 # Function view
 
 
-def entry_update(request, pk):
+def entry_detail(request, pk):
+    # Return the entry with id = pk
     entry = Entry.objects.get(id=pk)
-    form = EntryModelForm(instance=entry)
-    if request.method == "POST":
-        form = EntryModelForm(request.POST, instance=entry)
-        if form.is_valid():
-            form.save()
-            return redirect("/entries")
-
     context = {
-        "form": form,
         "entry": entry
     }
-
-    return render(request, "entries/entry_update.html", context)
-
-
-# Class view
-class EntryDeleteView(LoginRequiredMixin, generic.DeleteView):
-    template_name = "entries/entry_delete.html"
-    queryset = Entry.objects.all()
-
-    def get_success_url(self):
-        return reverse("entries:entry-list")
+    return render(request, "entries/entry_detail.html", context)
 
 # Function view
 
 
-def entry_delete(request, pk):
-    entry = Entry.objects.get(id=pk)
-    entry.delete()
-    return redirect("/entries")
+def landing_page(request):
+    return render(request, "landing.html")
 
-#######################
-### DEPRECATED CODE ###
-#######################
+# Class View
 
-# Function view
 
-def entry_list(request):
-    # Order entries by date_created (the '-' means last added first)
-    entries = Entry.objects.all().order_by('-date_created')
-    # default value of 'category'
-    category = 'all'
-    print(request.GET.keys())
-    
-    # if 'category' is passed as a '?category=xXx' parameter to the URL
-    if 'category' in request.GET.keys():
-        category=request.GET['category']
-        # if the category is different to 'all' apply another filter to the entries
-        if (category!='all'):
-            entries = entries.filter(category=category)
-    
-    # Create the paginator, and define the number of entries per page
-    p = Paginator(entries, 4)
-    num_pages = p.num_pages
-    
-    # get the page_num from the request;
-    # if the request dictionary does not contain 'page', use page 1 as default
-    page_num = request.GET.get('page', 1)
-    
-    # print('Current page: ', page_num)
-    # print('Total number of pages: ',p.num_pages)
-    # print('Number of entries: ',len(entries))
-    
+class EntryListByCategoryView(LoginRequiredMixin, generic.ListView):
+    template_name = "entries/testing.html"
 
-    # if a user tries to access a page that doesn't exist, take them to page 1;
-    try:
-        page = p.page(page_num)
-    except EmptyPage:
-        page = p.page(1)
+    def get_queryset(self):
+        category = self.kwargs['category']
+        return Entry.objects.filter(category=category)
 
-    entry_number = len(entries)
-    print(entry_number)
-    
-    context = {
-        "entries": page,
-        "num_pages": num_pages,
-        "page_num": page_num,
-        "entry_number": entry_number,
-        "category": category
-    }
-    return render(request, "entries/testing.html", context)
-
+    # change the default name for the iterable list from 'object_list' to 'entries'
+    context_object_name = "entries"
 
 # Below we've got the form using the EntryForm as opposed to EntryModelForm
 # However, this version is lengthier. The one above abstracts more code.

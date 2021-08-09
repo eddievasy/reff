@@ -6,7 +6,12 @@
     <div class="container mx-auto px-4 sm:px-8">
         <div class="mb-6 py-6 flex justify-between items-center border-b border-gray-200 w-full">
             <div>
+                {% ifequal by_me 'true' %}
+                <h1 class="text-4xl text-gray-800">My Entries</h1>
+                {% else %}
                 <h1 class="text-4xl text-gray-800">Entries</h1>
+                {% endifequal %}
+
             </div>
             <div>
                 <a class="w-full bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md text-white"
@@ -20,21 +25,32 @@
             <div class="my-2 flex sm:flex-row flex-col">
                 <div class="flex flex-row mb-1 sm:mb-0">
                     <div class="relative">
-                            <select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
-                                class="appearance-none h-full rounded-l border block appearance-none w-full bg-white border-gray-400 text-gray-700 py-2 px-7 pr-20 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                                <option value="{% url 'entries:entry-list' %}?&category=All">Select category</option>
-                                <option value="{% url 'entries:entry-list' %}?&category=Tech">Tech</option>
-                                <option value="{% url 'entries:entry-list' %}?&category=Health">Health</option>
-                                <option value="{% url 'entries:entry-list' %}?&category=Politics">Politics</option>
-                                <option value="{% url 'entries:entry-list' %}?&category=History">History</option>
-                                <option value="{% url 'entries:entry-list' %}?&category=Education">Education</option>
-                                <option value="{% url 'entries:entry-list' %}?&category=Sports">Sports</option>
-                                <option value="{% url 'entries:entry-list' %}?&category=Business">Business</option>
-                                <option value="{% url 'entries:entry-list' %}?&category=Science">Science</option>
-                                <option value="{% url 'entries:entry-list' %}?&category=Other">Other</option>
-                
-                            </select>
-                        
+                        <select
+                            onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+                            class="appearance-none h-full rounded-l border block appearance-none w-full bg-white border-gray-400 text-gray-700 py-2 px-7 pr-20 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                            <option>Select category</option>
+                            <option value="{% url 'entries:entry-list' %}?&category=all&by_me={{ by_me }}">All</option>
+                            <option value="{% url 'entries:entry-list' %}?&category=Tech&by_me={{ by_me }}">Tech
+                            </option>
+                            <option value="{% url 'entries:entry-list' %}?&category=Health&by_me={{ by_me }}">Health
+                            </option>
+                            <option value="{% url 'entries:entry-list' %}?&category=Politics&by_me={{ by_me }}">Politics
+                            </option>
+                            <option value="{% url 'entries:entry-list' %}?&category=History&by_me={{ by_me }}">History
+                            </option>
+                            <option value="{% url 'entries:entry-list' %}?&category=Education&by_me={{ by_me }}">
+                                Education</option>
+                            <option value="{% url 'entries:entry-list' %}?&category=Sports&by_me={{ by_me }}">Sports
+                            </option>
+                            <option value="{% url 'entries:entry-list' %}?&category=Business&by_me={{ by_me }}">Business
+                            </option>
+                            <option value="{% url 'entries:entry-list' %}?&category=Science&by_me={{ by_me }}">Science
+                            </option>
+                            <option value="{% url 'entries:entry-list' %}?&category=Other&by_me={{ by_me }}">Other
+                            </option>
+
+                        </select>
+
                         <div
                             class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
