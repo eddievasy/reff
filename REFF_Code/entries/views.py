@@ -11,6 +11,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Use custom url_generator to assign to each new entry
 from algorithms.random_url_string import url_generator
 
+# We'll use these classes to paginate a higher number of entries that are to be displayed
+from django.core.paginator import Paginator, EmptyPage
+
 # Generally speaking, web pages follow the CRUD+L format: Create, Retrieve, Updated, Delete and List
 
 # Class view
@@ -41,12 +44,49 @@ class TestingView(generic.TemplateView):
 def landing_page(request):
     return render(request, "landing.html")
 
+# Function view
+
+
+def entry_list(request):
+    entries = Entry.objects.all().order_by('-date_created')
+    # Create the paginator, and define the number of entries per page
+    p = Paginator(entries, 4)
+
+    
+    num_pages = p.num_pages
+    
+    # get the page_num from the request;
+    # use page 1 as default
+    page_num = request.GET.get('page', 1)
+    
+    print('Current page: ', page_num)
+    print('Total number of pages: ',p.num_pages)
+    print('The request:',request.body.decode('utf-8'))
+
+    # if a user tries to access a page that doesn't exist, take them to page 1;
+    try:
+        page = p.page(page_num)
+    except EmptyPage:
+        page = p.page(1)
+
+    entry_number = len(entries)
+    
+    context = {
+        "entries": page,
+        "num_pages": num_pages,
+        "page_num": page_num,
+        "entry_number": entry_number
+    }
+    return render(request, "entries/testing.html", context)
+
 
 # Class view
 # By also inheritting from LoginRequiredMixin, we restrict access to this particular view (it can only be called when the user is logged in)
 class EntryListView(LoginRequiredMixin, generic.ListView):
-    template_name = "entries/entry_list.html"
+
+    template_name = "entries/testing.html"
     queryset = Entry.objects.all()
+
     # change the default name for the iterable list from 'object_list' to 'entries'
     context_object_name = "entries"
 
@@ -54,7 +94,7 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
 
 
 class EntryListByCategoryView(LoginRequiredMixin, generic.ListView):
-    template_name = "entries/entry_list.html"
+    template_name = "entries/testing.html"
 
     def get_queryset(self):
         category = self.kwargs['category']
@@ -78,14 +118,6 @@ class MyEntryListByCategoryView(LoginRequiredMixin, generic.ListView):
     context_object_name = "entries"
 
 # Function view
-
-
-def entry_list(request):
-    entries = Entry.objects.all()
-    context = {
-        "entries": entries
-    }
-    return render(request, "entries/entry_list.html", context)
 
 
 class MyEntryListView(LoginRequiredMixin, generic.ListView):
