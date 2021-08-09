@@ -1,5 +1,7 @@
-from django.utils import timezone
-from django.db import models
+thisdict = {
+  "brand": "Ford",
+  "model": "Mustang",
+  "year": 1964
+}
 
-date_generated = models.DateTimeField(default=timezone.now)
-print(str(date_generated))
+print(thisdict.get('yearrr',2000))

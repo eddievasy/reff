@@ -14,6 +14,8 @@ from algorithms.random_url_string import url_generator
 # We'll use these classes to paginate a higher number of entries that are to be displayed
 from django.core.paginator import Paginator, EmptyPage
 
+import json
+
 # Generally speaking, web pages follow the CRUD+L format: Create, Retrieve, Updated, Delete and List
 
 # Class view
@@ -44,54 +46,46 @@ class TestingView(generic.TemplateView):
 def landing_page(request):
     return render(request, "landing.html")
 
-# Function view
-
-
-def entry_list(request):
-    entries = Entry.objects.all().order_by('-date_created')
-    # Create the paginator, and define the number of entries per page
-    p = Paginator(entries, 4)
-
-    
-    num_pages = p.num_pages
-    
-    # get the page_num from the request;
-    # use page 1 as default
-    page_num = request.GET.get('page', 1)
-    
-    print('Current page: ', page_num)
-    print('Total number of pages: ',p.num_pages)
-    print('The request:',request.body.decode('utf-8'))
-
-    # if a user tries to access a page that doesn't exist, take them to page 1;
-    try:
-        page = p.page(page_num)
-    except EmptyPage:
-        page = p.page(1)
-
-    entry_number = len(entries)
-    
-    context = {
-        "entries": page,
-        "num_pages": num_pages,
-        "page_num": page_num,
-        "entry_number": entry_number
-    }
-    return render(request, "entries/testing.html", context)
-
 
 # Class view
 # By also inheritting from LoginRequiredMixin, we restrict access to this particular view (it can only be called when the user is logged in)
 class EntryListView(LoginRequiredMixin, generic.ListView):
+    template_name = "entries/testing_2.html"
+    # Declare the number of entries per page
+    paginate_by = 4
+    # # Order entries by date_created (the '-' means last added first)
+    # queryset = Entry.objects.all().order_by('-date_created')
+    
+    def get_queryset(self):
+        # print(self.request.GET)
+        # Order entries by date_created (the '-' means last added first)
+        entries = Entry.objects.all().order_by('-date_created')
+        if 'category' in self.request.GET.keys():
+            category=self.request.GET['category']
+            # if the category is different to 'all' apply another filter to the entries
+            if (category!='all'):
+                entries = entries.filter(category=category)
+        return entries
+        
+    
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # default value for category
+        category = 'all'
+        # grab the 'category' parameter from the URL of form "/?category=xXxX"
+        if 'category' in self.request.GET.keys() and self.request.GET['category']!='all':
+            category = self.request.GET['category']
+        context['category']=category
+        context["num_entries"] = len(self.get_queryset())
+        print(self.get_queryset())
+        print('LENGTH ' + str(len(self.get_queryset())))
+        
+        return context
+    
 
-    template_name = "entries/testing.html"
-    queryset = Entry.objects.all()
-
-    # change the default name for the iterable list from 'object_list' to 'entries'
-    context_object_name = "entries"
 
 # Class View
-
 
 class EntryListByCategoryView(LoginRequiredMixin, generic.ListView):
     template_name = "entries/testing.html"
@@ -267,6 +261,58 @@ def entry_delete(request, pk):
     entry = Entry.objects.get(id=pk)
     entry.delete()
     return redirect("/entries")
+
+#######################
+### DEPRECATED CODE ###
+#######################
+
+# Function view
+
+def entry_list(request):
+    # Order entries by date_created (the '-' means last added first)
+    entries = Entry.objects.all().order_by('-date_created')
+    # default value of 'category'
+    category = 'all'
+    print(request.GET.keys())
+    
+    # if 'category' is passed as a '?category=xXx' parameter to the URL
+    if 'category' in request.GET.keys():
+        category=request.GET['category']
+        # if the category is different to 'all' apply another filter to the entries
+        if (category!='all'):
+            entries = entries.filter(category=category)
+    
+    # Create the paginator, and define the number of entries per page
+    p = Paginator(entries, 4)
+    num_pages = p.num_pages
+    
+    # get the page_num from the request;
+    # if the request dictionary does not contain 'page', use page 1 as default
+    page_num = request.GET.get('page', 1)
+    
+    # print('Current page: ', page_num)
+    # print('Total number of pages: ',p.num_pages)
+    # print('Number of entries: ',len(entries))
+    
+
+    # if a user tries to access a page that doesn't exist, take them to page 1;
+    try:
+        page = p.page(page_num)
+    except EmptyPage:
+        page = p.page(1)
+
+    entry_number = len(entries)
+    print(entry_number)
+    
+    context = {
+        "entries": page,
+        "num_pages": num_pages,
+        "page_num": page_num,
+        "entry_number": entry_number,
+        "category": category
+    }
+    return render(request, "entries/testing.html", context)
+
 
 # Below we've got the form using the EntryForm as opposed to EntryModelForm
 # However, this version is lengthier. The one above abstracts more code.
