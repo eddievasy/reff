@@ -95,13 +95,13 @@
                     </div>
 
                     <div
-                        class="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between          ">
+                        class="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
                         <span class="text-xs xs:text-sm text-gray-900">
                             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} ({{ num_entries }} entries)
                         </span>
                         <div class="inline-flex mt-2 xs:mt-0">
                             {% if page_obj.has_previous %}
-                            <a href="{% url 'entries:entry-list' %}?page={{ page_obj.previous_page_number }}&category={{ category }}">
+                            <a href="{% url 'entries:entry-list' %}?page={{ page_obj.previous_page_number }}&category={{ category }}&by_me={{ by_me }}">
                                 <button
                                     class="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-l">
                                     Prev
@@ -109,7 +109,7 @@
                             </a>
                             {% endif %}
                             {% if page_obj.has_next %}
-                            <a href="{% url 'entries:entry-list' %}?page={{ page_obj.next_page_number }}&category={{ category }}">
+                            <a href="{% url 'entries:entry-list' %}?page={{ page_obj.next_page_number }}&category={{ category }}&by_me={{ by_me }}">
                                 <button
                                     class="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-r">
                                     Next

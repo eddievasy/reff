@@ -65,6 +65,13 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
             # if the category is different to 'all' apply another filter to the entries
             if (category!='all'):
                 entries = entries.filter(category=category)
+        # Filter the queryset in order to display entries created by the user logged in
+        if 'by_me' in self.request.GET.keys():
+            by_me=self.request.GET['by_me']
+            if by_me=='true':
+                entry_user = self.request.user
+                entries=entries.filter(user=entry_user)
+            
         return entries
         
     
@@ -74,12 +81,20 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
         # default value for category
         category = 'all'
         # grab the 'category' parameter from the URL of form "/?category=xXxX"
-        if 'category' in self.request.GET.keys() and self.request.GET['category']!='all':
+        if 'category' in self.request.GET.keys():
             category = self.request.GET['category']
+        # add category to context
         context['category']=category
+        # add number of entries to context
         context["num_entries"] = len(self.get_queryset())
-        print(self.get_queryset())
-        print('LENGTH ' + str(len(self.get_queryset())))
+        print(self.request.GET)
+        # print('LENGTH ' + str(len(self.get_queryset())))
+        # default value for by_me is 'false'
+        by_me='false'
+        if 'by_me' in self.request.GET.keys() and self.request.GET['by_me']=='true':
+            by_me='true'
+            
+        context['by_me']=by_me
         
         return context
     
