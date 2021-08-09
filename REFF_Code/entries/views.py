@@ -52,7 +52,7 @@ def landing_page(request):
 class EntryListView(LoginRequiredMixin, generic.ListView):
     template_name = "entries/testing_2.html"
     # Declare the number of entries per page
-    paginate_by = 4
+    paginate_by = 10
     # # Order entries by date_created (the '-' means last added first)
     # queryset = Entry.objects.all().order_by('-date_created')
     

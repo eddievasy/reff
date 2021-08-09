@@ -6,39 +6,35 @@
     <div class="container mx-auto px-4 sm:px-8">
         <div class="mb-6 py-6 flex justify-between items-center border-b border-gray-200 w-full">
             <div>
-              <h1 class="text-4xl text-gray-800">Entries</h1>
+                <h1 class="text-4xl text-gray-800">Entries</h1>
             </div>
             <div>
-              <a class="w-full bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md text-white" href="{% url 'entries:entry-create' %}">Create new entry</a>
+                <a class="w-full bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md text-white"
+                    href="{% url 'entries:entry-create' %}">Create new entry</a>
             </div>
-          </div>
+        </div>
         <div class="py-1">
             <div>
-                <h2 class="text-2xl font-semibold leading-tight">Users</h2>
+                <h2 class="text-2xl font-semibold leading-tight">Category: {{ category }}</h2>
             </div>
             <div class="my-2 flex sm:flex-row flex-col">
                 <div class="flex flex-row mb-1 sm:mb-0">
                     <div class="relative">
-                        <select
-                            class="appearance-none h-full rounded-l border block appearance-none w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                            <option>5</option>
-                            <option>10</option>
-                            <option>20</option>
-                        </select>
-                        <div
-                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="relative">
-                        <select
-                            class="appearance-none h-full rounded-r border-t sm:rounded-r-none sm:border-r-0 border-r border-b block appearance-none w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:border-l focus:border-r focus:bg-white focus:border-gray-500">
-                            <option>All</option>
-                            <option>Active</option>
-                            <option>Inactive</option>
-                        </select>
+                            <select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
+                                class="appearance-none h-full rounded-l border block appearance-none w-full bg-white border-gray-400 text-gray-700 py-2 px-7 pr-20 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                <option value="{% url 'entries:entry-list' %}?&category=All">Select category</option>
+                                <option value="{% url 'entries:entry-list' %}?&category=Tech">Tech</option>
+                                <option value="{% url 'entries:entry-list' %}?&category=Health">Health</option>
+                                <option value="{% url 'entries:entry-list' %}?&category=Politics">Politics</option>
+                                <option value="{% url 'entries:entry-list' %}?&category=History">History</option>
+                                <option value="{% url 'entries:entry-list' %}?&category=Education">Education</option>
+                                <option value="{% url 'entries:entry-list' %}?&category=Sports">Sports</option>
+                                <option value="{% url 'entries:entry-list' %}?&category=Business">Business</option>
+                                <option value="{% url 'entries:entry-list' %}?&category=Science">Science</option>
+                                <option value="{% url 'entries:entry-list' %}?&category=Other">Other</option>
+                
+                            </select>
+                        
                         <div
                             class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -55,8 +51,13 @@
                             </path>
                         </svg>
                     </span>
-                    <input placeholder="Search"
-                        class="appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none" />
+                    <!-- <input placeholder="Search"
+                        class="appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none" /> -->
+                    <form
+                        class="appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
+                        action="{% url 'landing-page' %}" method="get">
+                        <input name="q" type="text" placeholder="Search all...">
+                    </form>
                 </div>
 
             </div>
@@ -94,14 +95,14 @@
                         {% endfor %}
                     </div>
 
-                    <div
-                        class="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
+                    <div class="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
                         <span class="text-xs xs:text-sm text-gray-900">
                             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} ({{ num_entries }} entries)
                         </span>
                         <div class="inline-flex mt-2 xs:mt-0">
                             {% if page_obj.has_previous %}
-                            <a href="{% url 'entries:entry-list' %}?page={{ page_obj.previous_page_number }}&category={{ category }}&by_me={{ by_me }}">
+                            <a
+                                href="{% url 'entries:entry-list' %}?page={{ page_obj.previous_page_number }}&category={{ category }}&by_me={{ by_me }}">
                                 <button
                                     class="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-l">
                                     Prev
@@ -109,7 +110,8 @@
                             </a>
                             {% endif %}
                             {% if page_obj.has_next %}
-                            <a href="{% url 'entries:entry-list' %}?page={{ page_obj.next_page_number }}&category={{ category }}&by_me={{ by_me }}">
+                            <a
+                                href="{% url 'entries:entry-list' %}?page={{ page_obj.next_page_number }}&category={{ category }}&by_me={{ by_me }}">
                                 <button
                                     class="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-r">
                                     Next
