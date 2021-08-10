@@ -64,7 +64,6 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
             if by_me == 'true':
                 entry_user = self.request.user
                 entries = entries.filter(user=entry_user)
-
         return entries
 
     def get_context_data(self, **kwargs):
@@ -86,7 +85,7 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
             by_me = 'true'
 
         context['by_me'] = by_me
-        print(context)
+        # print(context)
 
         return context
 
@@ -159,7 +158,8 @@ class EntryUpdateView(LoginRequiredMixin, generic.UpdateView):
     form_class = EntryModelForm
 
     def get_success_url(self):
-        return reverse("entries:entry-list")
+        short_url=self.get_object().short_url
+        return reverse("entry-detail-short-url", kwargs={'short_url': short_url})
 
 
 # Class view
