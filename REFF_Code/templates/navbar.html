@@ -18,8 +18,7 @@
           {% if request.user.is_authenticated %}
           <a href="{% url 'entries:entry-list' %}?by_me=true" class="mr-5 hover:text-gray-900">My Entries</a>
           {% endif %}
-          <a class="mr-5 hover:text-gray-900">Third Link</a>
-          <a class="mr-5 hover:text-gray-900">Fourth Link</a>
+          <a class="mr-5 hover:text-gray-900">My Favourites</a>
         </nav>
         {% if not request.user.is_authenticated %}
         <a href="{% url 'signup' %}" class="mr-5 hover:text-gray-900">Signup</a>

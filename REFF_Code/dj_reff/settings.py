@@ -31,18 +31,18 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Local apps
+    'entries',
+    # Third party apps
+    'crispy_forms',  
+    'crispy_tailwind',
+    # Admin apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Third party apps
-    'crispy_forms',  
-    'crispy_tailwind',
-
-    # Local apps
-    'entries'
 ]
 
 MIDDLEWARE = [
