@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from entries.views import entry_list, entry_detail, entry_create, entry_update, entry_delete, EntryListView, EntryDetailView, EntryCreateView, EntryUpdateView, EntryDeleteView, MyEntryListView, EntryListByCategoryView, MyEntryListByCategoryView
+from entries.views import entry_list, entry_detail, entry_create, entry_update, entry_delete, review_create, EntryListView, EntryDetailView, EntryCreateView, EntryUpdateView, EntryDeleteView, MyEntryListView, EntryListByCategoryView, MyEntryListByCategoryView, ReviewCreateView
 
 app_name = "entries"
 
@@ -17,8 +17,9 @@ urlpatterns = [
     # or the primary key can be declared as <int: pk>
     path('<int:pk>/', EntryDetailView.as_view(), name='entry-detail'),
     path('update-<int:pk>/', EntryUpdateView.as_view(), name='entry-update'),
-    path('delete-<int:pk>/', EntryDeleteView.as_view() , name='entry-delete'),
+    path('delete-<int:pk>/', EntryDeleteView.as_view(), name='entry-delete'),
+    path('review-<int:pk>/', review_create, name='review-create'),
     # the paths below have been implemented through the entry-list path using '?param=xXx' parameters instead
     # path('category-<str:category>/', EntryListByCategoryView.as_view(), name='entry-list-by-category'),
     # path('mine/<str:category>/', MyEntryListByCategoryView.as_view(), name='my-entry-list-by-category')
-] 
+]

@@ -1,8 +1,8 @@
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
-from entries.models import Entry
-from entries.forms import EntryForm, EntryModelForm, CustomUserCreationForm
+from entries.models import Entry, Review
+from entries.forms import EntryForm, EntryModelForm, CustomUserCreationForm, ReviewModelForm
 # folder contains TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views import generic
 # we'll use this class to verify that the current user is authenticated
@@ -14,6 +14,7 @@ from algorithms.random_url_string import url_generator
 # We'll use these classes to paginate a higher number of entries that are to be displayed
 from django.core.paginator import Paginator, EmptyPage
 
+import json
 
 # Generally speaking, web pages follow the CRUD+L format: Create, Retrieve, Updated, Delete and List
 
@@ -77,7 +78,7 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
         context['category'] = category
         # add number of entries to context
         context["num_entries"] = len(self.get_queryset())
-        print(self.request.GET)
+        # print(self.request.GET)
         # print('LENGTH ' + str(len(self.get_queryset())))
         # default value for by_me is 'false'
         by_me = 'false'
@@ -104,7 +105,8 @@ class EntryDetailView(generic.DetailView):
 
 class EntryDetailShortURLView(generic.DetailView):
     template_name = "entries/entry_detail.html"
-
+    
+    
     # return the Entry which has the corresponding short URL
     def get_object(self, queryset=None):
         short_url = self.kwargs['short_url']
@@ -148,6 +150,35 @@ class EntryCreateView(LoginRequiredMixin, generic.CreateView):
         )
         return super(EntryCreateView, self).form_valid(form)
 
+# Function based view
+    
+def review_create(request,pk):
+    entry_object = Entry.objects.get(id=pk)
+    form = ReviewModelForm()
+    
+    # The following if-branch gets executed when the request is of 'POST' format;
+    # However, the first time this view function is called is of format 'GET ...';
+    if request.method == "POST":
+        form = ReviewModelForm(request.POST)
+        if form.is_valid():
+            comment = form.cleaned_data['comment']
+            rating = form.cleaned_data['rating']
+            user = request.user
+            entry = entry_object
+            Review.objects.create(
+                comment=comment,
+                rating=rating,
+                user=user,
+                entry=entry
+            )
+            short_url=entry.short_url
+            return redirect(reverse("entry-detail-short-url", kwargs={"short_url":short_url}))
+        
+    context = {
+        "form":form,
+    }
+    return render(request, "entries/review_create.html", context)
+                
 
 # Class view
 
@@ -174,6 +205,35 @@ class EntryDeleteView(LoginRequiredMixin, generic.DeleteView):
 ##############################################
 ############ DEPRECATED CODE #################
 ##############################################
+
+class ReviewCreateView(LoginRequiredMixin, generic.CreateView):
+    template_name="entries/review_create.html"
+    form_class = ReviewModelForm
+
+    
+    def get_success_url(self):
+        return reverse("entries:entry-list")
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print('CONTEXT ->',context)
+        return context
+        
+    
+    def form_valid(self, form):
+        # Assign the current logged in user to the review
+        review = form.save(commit=False)
+        review.user = self.request.user
+        # Assign the current entry to the review
+        print('POST LINE -->',self.request.POST)
+        print(review.user)
+        
+        print(self)
+        review.entry = Entry.objects.get(id=27)
+        
+        review.save()
+        return super(ReviewCreateView, self).form_valid(form)
+
 
 # Class View
 

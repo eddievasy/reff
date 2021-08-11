@@ -56,6 +56,7 @@ class Review(models.Model):
     comment = models.CharField(max_length=250)
 
     entry = models.ForeignKey("Entry", on_delete=models.CASCADE)
+    user = models.ForeignKey("User", on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
