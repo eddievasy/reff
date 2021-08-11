@@ -4,29 +4,53 @@
 {% block content %}
 
 <section class="text-gray-600 body-font overflow-hidden">
-    <div class="container px-5 py-24 mx-auto">
+    <div class="container px-5 py-10 mx-auto">
         <div class="lg:w-3/5 mx-auto flex flex-wrap">
             <div class="lg:w-4/5">
                 <h2 class="text-sm title-font text-gray-500 tracking-widest">Category</h2>
                 <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{ entry.category }}</h1>
                 <div class="flex mb-4">
-                    <a href="{% url 'entry-detail-short-url' entry.short_url %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Fact</a>
-                    <a href="{% url 'entries:review-create' entry.pk %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Review</a>
+                    <a href="{% url 'entry-detail-short-url' entry.short_url %}"
+                        class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Fact</a>
+                    <a href="{% url 'entries:review-create' entry.pk %}"
+                        class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Review</a>
                     <a href="{% url 'entries:entry-update' entry.pk %}"
                         class="flex-grow text-blue-500 border-b-2 border-blue-500 py-2 text-lg px-1">Update</a>
                 </div>
-
+                {% if are_users_the_same == True %}
+                {% if entry_reviews_number == 0 %}
                 <form method="POST">
                     <!-- The csrf token below is good security implementation for form submission within Django -->
                     {% csrf_token %}
                     {{ form|crispy }}
                     <div class='flex-row'>
                         <button
-                            class="text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded">Submit</button>
-                        <button
-                            class="ml-auto text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded"><a
-                                href="{% url 'entries:entry-delete' entry.pk %}">Delete</a></button>
+                            class="text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded font-bold">Submit</button>
+                        <a class="w-full bg-red-500 hover:bg-red-700 px-3 py-3 rounded-md text-white font-bold"
+                            href="{% url 'entries:entry-delete' entry.pk %}">Delete</a>
                     </div>
+                    {% else %}
+                    <div class="flex flex-col md:pr-10 md:mb-0 mb-6 pr-0 w-full md:w-auto md:text-left text-center">
+                        <h2 class="text-xs text-indigo-500 tracking-widest font-medium title-font mb-1">LIMITED OPTIONS
+                        </h2>
+                        <h1 class="md:text-3xl text-2xl font-medium title-font text-gray-900">The reviewing process has
+                            started
+                        </h1>
+                        <div class='flex-row py-4'>
+                            <a class="w-full bg-red-500 hover:bg-red-700 px-3 py-3 rounded-md text-white font-bold"
+                            href="{% url 'entries:entry-delete' entry.pk %}">Delete</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <div class="flex flex-col md:pr-10 md:mb-0 mb-6 pr-0 w-full md:w-auto md:text-left text-center">
+                        <h2 class="text-xs text-indigo-500 tracking-widest font-medium title-font mb-1">ACCESS DENIED
+                        </h2>
+                        <h1 class="md:text-3xl text-2xl font-medium title-font text-gray-900">You are not the original
+                            creator
+                        </h1>
+                    </div>
+                    {% endif %}
                 </form>
             </div>
         </div>

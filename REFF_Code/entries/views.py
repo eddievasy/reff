@@ -102,15 +102,7 @@ class EntryDetailView(generic.DetailView):
     template_name = "entries/entry_detail.html"
     queryset = Entry.objects.all()
     context_object_name = "entry"
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        entry = self.get_queryset()
-        context['source_domain']=url_parser(entry.source)
-        print(context)
-        return context
-    
-    
+
 
 # Class view
 
@@ -124,6 +116,14 @@ class EntryDetailShortURLView(generic.DetailView):
         short_url = self.kwargs['short_url']
         entry = Entry.objects.get(short_url=short_url)
         return entry
+
+    # pass the source_domain through the context to the HTML template
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        entry = self.get_object()
+        context['source_domain'] = url_parser(entry.source)
+        print(context)
+        return context
 
     context_object_name = "entry"
 
@@ -168,7 +168,7 @@ class EntryCreateView(LoginRequiredMixin, generic.CreateView):
 def review_create(request, pk):
     entry_object = Entry.objects.get(id=pk)
     form = ReviewModelForm()
-    
+
     # the user needs to be logged in in order to leave a review
     if not request.user.is_authenticated:
         return redirect(reverse("login"))
@@ -193,15 +193,19 @@ def review_create(request, pk):
 
     reviews_by_current_user = Review.objects.filter(
         entry=entry_object, user=request.user)
-    print(reviews_by_current_user)
+    # print(reviews_by_current_user)
+    # print(reviews_number)
     # number of reviews left by current user (can't be higher than 1)
     reviews_number = str(len(reviews_by_current_user))
-    print(reviews_number)
+
+    # Fetch source_domain in order to add to context
+    source_domain = url_parser(entry_object.source)
 
     context = {
         "form": form,
         "entry": entry_object,
-        "reviews_number": reviews_number
+        "reviews_number": reviews_number,
+        "source_domain": source_domain
     }
     return render(request, "entries/review_create.html", context)
 
@@ -214,6 +218,26 @@ class EntryUpdateView(LoginRequiredMixin, generic.UpdateView):
     queryset = Entry.objects.all()
     form_class = EntryModelForm
 
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # pass the number of reviews left to this entry via the context
+        # so we can restrict updating for entries who have received more than one review;
+        entry_object = self.get_object()
+        entry_reviews = Review.objects.filter(entry=entry_object)
+        entry_reviews_number = len(entry_reviews)
+        context['entry_reviews_number'] = entry_reviews_number
+        
+        # check to see if the user logged in is also the creator of the entry
+        user_logged_in = self.request.user
+        user_entry = entry_object.user
+        are_users_the_same = user_logged_in==user_entry
+        print('Are users the same?', are_users_the_same)
+        context['are_users_the_same']=are_users_the_same
+        print(context)
+        return context
+
     def get_success_url(self):
         short_url = self.get_object().short_url
         return reverse("entry-detail-short-url", kwargs={'short_url': short_url})
@@ -224,6 +248,19 @@ class EntryDeleteView(LoginRequiredMixin, generic.DeleteView):
     template_name = "entries/entry_delete.html"
     queryset = Entry.objects.all()
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # check to see if the user logged in is also the creator of the entry
+        entry_object = self.get_object()
+        user_logged_in = self.request.user
+        user_entry = entry_object.user
+        are_users_the_same = user_logged_in==user_entry
+        print('Are users the same?', are_users_the_same)
+        context['are_users_the_same']=are_users_the_same
+        print(context)
+        return context
+    
     def get_success_url(self):
         return reverse("entries:entry-list")
 
