@@ -3,18 +3,32 @@
 
 {% block content %}
 
-<h1 class="text-4xl text-gray-800 mx-auto max-w-lg mt-5">New review</h1>
-<div class="max-w-lg mx-auto mt-5">
-    <!-- 'action="."' below indicated where the form is submitted. '.' means current URL -->
-    <form method="POST" action=".">
-        <!-- The csrf token below is good security implementation for form submission within Django -->
-        {% csrf_token %}
-        {{ form|crispy }}
+<section class="text-gray-600 body-font overflow-hidden">
+    <div class="container px-5 py-24 mx-auto">
+        <div class="lg:w-3/5 mx-auto flex flex-wrap">
+            <div class="lg:w-4/5">
+                <h2 class="text-sm title-font text-gray-500 tracking-widest">Category</h2>
+                <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{ entry.category }}</h1>
+                <div class="flex mb-4">
+                    <a href="{% url 'entry-detail-short-url' entry.short_url %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Fact</a>
+                    <a class="flex-grow text-blue-500 border-b-2 border-blue-500 py-2 text-lg px-1">Review</a>
+                    <a href="{% url 'entries:entry-update' entry.pk %}"
+                        class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Update</a>
+                </div>
 
-        <button class="w-full bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md text-white" type="submit"> Submit
-        </button>
-    </form>
-    <div class='mt-5 mb-10 border-t border-gray-500 pt-2'><a class="hover:text-blue-500 mt-3 text-xl" href="{% url 'entries:entry-list' %}">Back to entry list</a></div>
-</div>
+                <form method="POST">
+                    <!-- The csrf token below is good security implementation for form submission within Django -->
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class='flex-row'>
+                        <button
+                            class="text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
 
 {% endblock content %}

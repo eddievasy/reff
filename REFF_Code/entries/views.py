@@ -176,6 +176,7 @@ def review_create(request,pk):
         
     context = {
         "form":form,
+        "entry": entry_object
     }
     return render(request, "entries/review_create.html", context)
                 
