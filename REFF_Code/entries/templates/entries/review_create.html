@@ -17,6 +17,7 @@
                         class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Update</a>
                 </div>
                 {% if reviews_number == '0' %}
+                
                 <form method="POST">
                     <!-- The csrf token below is good security implementation for form submission within Django -->
                     {% csrf_token %}

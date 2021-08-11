@@ -11,6 +11,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Use custom url_generator to assign to each new entry
 from algorithms.random_url_string import url_generator
 
+# Use domain_extractor to extract the domain from the long URL source
+from algorithms.domain_extractor import url_parser
+
 # We'll use these classes to paginate a higher number of entries that are to be displayed
 from django.core.paginator import Paginator, EmptyPage
 
@@ -99,6 +102,15 @@ class EntryDetailView(generic.DetailView):
     template_name = "entries/entry_detail.html"
     queryset = Entry.objects.all()
     context_object_name = "entry"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        entry = self.get_queryset()
+        context['source_domain']=url_parser(entry.source)
+        print(context)
+        return context
+    
+    
 
 # Class view
 
@@ -156,6 +168,10 @@ class EntryCreateView(LoginRequiredMixin, generic.CreateView):
 def review_create(request, pk):
     entry_object = Entry.objects.get(id=pk)
     form = ReviewModelForm()
+    
+    # the user needs to be logged in in order to leave a review
+    if not request.user.is_authenticated:
+        return redirect(reverse("login"))
 
     # The following if-branch gets executed when the request is of 'POST' format;
     # However, the first time this view function is called is of format 'GET ...';
