@@ -31,14 +31,23 @@ class ReviewModelForm(forms.ModelForm):
     # the format of the validation functions is clean_field_name()
     def clean_rating(self):
         rating = self.cleaned_data['rating']
+        # make sure the range is correct
         if rating < 0 or rating > 5:
-            raise ValidationError('The rating value can only be one of these: 0 1 2 3 4 5')
+            raise ValidationError('Acceptable values only: 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5')
+        # make sure the value is a multiple of 0.5
+        possible_remainders = []
+        for i in range(11):
+            possible_remainders.append(i)
+        remainder = rating / 0.5
+        if remainder not in possible_remainders:
+            raise ValidationError('Acceptable values only: 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5')
         # always return the data
         return rating
 
     class Meta:
         model = Review
         fields = ('comment', 'rating',)
+        help_texts = {'rating': 'Enter a value between 0 and 5, which is a multiple of 0.5'}
 
 
 # The below form is the more comprehensive way of using forms in Django;

@@ -105,9 +105,9 @@ class EntryDetailView(generic.DetailView):
 
 class EntryDetailShortURLView(generic.DetailView):
     template_name = "entries/entry_detail.html"
-    
-    
+
     # return the Entry which has the corresponding short URL
+
     def get_object(self, queryset=None):
         short_url = self.kwargs['short_url']
         entry = Entry.objects.get(short_url=short_url)
@@ -151,11 +151,12 @@ class EntryCreateView(LoginRequiredMixin, generic.CreateView):
         return super(EntryCreateView, self).form_valid(form)
 
 # Function based view
-    
-def review_create(request,pk):
+
+
+def review_create(request, pk):
     entry_object = Entry.objects.get(id=pk)
     form = ReviewModelForm()
-    
+
     # The following if-branch gets executed when the request is of 'POST' format;
     # However, the first time this view function is called is of format 'GET ...';
     if request.method == "POST":
@@ -171,15 +172,23 @@ def review_create(request,pk):
                 user=user,
                 entry=entry
             )
-            short_url=entry.short_url
-            return redirect(reverse("entry-detail-short-url", kwargs={"short_url":short_url}))
-        
+            short_url = entry.short_url
+            return redirect(reverse("entry-detail-short-url", kwargs={"short_url": short_url}))
+
+    reviews_by_current_user = Review.objects.filter(
+        entry=entry_object, user=request.user)
+    print(reviews_by_current_user)
+    # number of reviews left by current user (can't be higher than 1)
+    reviews_number = str(len(reviews_by_current_user))
+    print(reviews_number)
+
     context = {
-        "form":form,
-        "entry": entry_object
+        "form": form,
+        "entry": entry_object,
+        "reviews_number": reviews_number
     }
     return render(request, "entries/review_create.html", context)
-                
+
 
 # Class view
 
@@ -190,7 +199,7 @@ class EntryUpdateView(LoginRequiredMixin, generic.UpdateView):
     form_class = EntryModelForm
 
     def get_success_url(self):
-        short_url=self.get_object().short_url
+        short_url = self.get_object().short_url
         return reverse("entry-detail-short-url", kwargs={'short_url': short_url})
 
 
@@ -208,30 +217,28 @@ class EntryDeleteView(LoginRequiredMixin, generic.DeleteView):
 ##############################################
 
 class ReviewCreateView(LoginRequiredMixin, generic.CreateView):
-    template_name="entries/review_create.html"
+    template_name = "entries/review_create.html"
     form_class = ReviewModelForm
 
-    
     def get_success_url(self):
         return reverse("entries:entry-list")
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print('CONTEXT ->',context)
+        print('CONTEXT ->', context)
         return context
-        
-    
+
     def form_valid(self, form):
         # Assign the current logged in user to the review
         review = form.save(commit=False)
         review.user = self.request.user
         # Assign the current entry to the review
-        print('POST LINE -->',self.request.POST)
+        print('POST LINE -->', self.request.POST)
         print(review.user)
-        
+
         print(self)
         review.entry = Entry.objects.get(id=27)
-        
+
         review.save()
         return super(ReviewCreateView, self).form_valid(form)
 

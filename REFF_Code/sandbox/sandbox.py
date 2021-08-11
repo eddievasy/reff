@@ -1,7 +1,5 @@
-thisdict = {
-  "brand": "Ford",
-  "model": "Mustang",
-  "year": 1964
-}
+possible_remainders = []
+for i in range(11):
+  possible_remainders.append(i)
 
-print(thisdict.get('yearrr',2000))
+print(possible_remainders)

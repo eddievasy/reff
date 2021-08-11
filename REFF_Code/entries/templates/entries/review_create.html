@@ -10,12 +10,13 @@
                 <h2 class="text-sm title-font text-gray-500 tracking-widest">Category</h2>
                 <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{ entry.category }}</h1>
                 <div class="flex mb-4">
-                    <a href="{% url 'entry-detail-short-url' entry.short_url %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Fact</a>
+                    <a href="{% url 'entry-detail-short-url' entry.short_url %}"
+                        class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Fact</a>
                     <a class="flex-grow text-blue-500 border-b-2 border-blue-500 py-2 text-lg px-1">Review</a>
                     <a href="{% url 'entries:entry-update' entry.pk %}"
                         class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Update</a>
                 </div>
-
+                {% if reviews_number == '0' %}
                 <form method="POST">
                     <!-- The csrf token below is good security implementation for form submission within Django -->
                     {% csrf_token %}
@@ -25,6 +26,15 @@
                             class="text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded">Submit</button>
                     </div>
                 </form>
+                {% else %}
+                <div class="flex flex-col md:pr-10 md:mb-0 mb-6 pr-0 w-full md:w-auto md:text-left text-center">
+                    <h2 class="text-xs text-indigo-500 tracking-widest font-medium title-font mb-1">LIMIT REACHED</h2>
+                    <h1 class="md:text-3xl text-2xl font-medium title-font text-gray-900">Only one review per entry allowed</h1>
+                  </div>
+                {% endif %}
+
+                <!-- Prints number of reviews left by the currently logged in user to this entry -->
+                <!-- {{ reviews_number }} -->
             </div>
         </div>
     </div>

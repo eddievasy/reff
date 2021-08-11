@@ -10,7 +10,8 @@
         <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{ entry.category }}</h1>
         <div class="flex mb-4">
           <a class="flex-grow text-blue-500 border-b-2 border-blue-500 py-2 text-lg px-1">Fact</a>
-          <a href="{% url 'entries:review-create' entry.pk %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Review</a>
+          <a href="{% url 'entries:review-create' entry.pk %}"
+            class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Review</a>
           <a href="{% url 'entries:entry-update' entry.pk %}"
             class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Update</a>
         </div>
@@ -30,7 +31,8 @@
         <div class="flex">
           <span class="title-font font-medium text-2xl text-gray-900">Score: 0</span>
           <button
-            class="flex ml-auto text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded">See reviews</button>
+            class="flex ml-auto text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded">See
+            reviews</button>
           <button
             class="rounded-full w-10 h-10 bg-gray-200 hover:bg-gray-300 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
             <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5"
@@ -40,6 +42,27 @@
               </path>
             </svg>
           </button>
+          <button onclick="copyToClipboard()"
+            class="rounded-full w-10 h-10 bg-gray-200 hover:bg-gray-300 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
+            <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5"
+              viewBox="0 0 24 24">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+              <rect x="9" y="3" width="6" height="4" rx="2" />
+            </svg>
+          </button>
+          
+          <script>
+            function copyToClipboard(text) {
+              var inputc = document.body.appendChild(document.createElement("input"));
+              inputc.value = window.location.href;
+              inputc.focus();
+              inputc.select();
+              document.execCommand('copy');
+              inputc.parentNode.removeChild(inputc);
+              alert("URL Copied.");
+            }
+          </script>
         </div>
       </div>
     </div>
