@@ -157,7 +157,33 @@ class EntryDetailShortURLView(generic.DetailView):
         entry = self.get_object()
         context['source_domain'] = url_parser(entry.source)
         # print(context)
+        
+        # Add 'average_score' to context
+        # returns a dictionary with the key 'rating__avg'
+        score = Review.objects.filter(
+            entry=entry).aggregate(Avg('rating'))
+        # returns the actual average score value
+        average_score = score['rating__avg']
+        # print(average_score)
+        # round all float instances to 1 decimal, and replace all NoneType with 0
+        if isinstance(average_score, float):
+            average_score = round(average_score, 1)
+            # print(average_score)
+        else:
+            average_score = 0
+        context['average_score']=average_score
+        
+        # Add 'reviews_number' to context
+        # print(Review.objects.filter(entry=entry))
+        reviews_number=len(Review.objects.filter(entry=entry))
+        # print(reviews_number)
+        context['reviews_number']=reviews_number
+        
+        print(context)
+        
         return context
+    
+        
 
     context_object_name = "entry"
 
