@@ -17,7 +17,9 @@ from algorithms.domain_extractor import url_parser
 # We'll use these classes to paginate a higher number of entries that are to be displayed
 from django.core.paginator import Paginator, EmptyPage
 
-import json
+# we need to use Avg to calculate the average scores
+from django.db.models import Avg
+
 
 # Generally speaking, web pages follow the CRUD+L format: Create, Retrieve, Updated, Delete and List
 
@@ -89,21 +91,39 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
             by_me = 'true'
 
         context['by_me'] = by_me
-        
+
         additional_info = {}
-        
+
+        # add an 'additional_info' dictionary to the context in which we will store the domain urls to display in the template
         object_list = context['object_list']
         for object in object_list:
             domain_url = url_parser(object.source)
             additional_info[object.id] = domain_url
-        
-        context['additional_info']=additional_info
-        
-        print('CONTEXT --->',context)
-        print()
-        
-        
 
+        context['additional_info'] = additional_info
+
+        # add an 'additional_info_2' dictionary to the context in which we will store the average scores for each entry we iterate over in the template
+        additional_info_2 = {}
+        for object in object_list:
+            # returns a dictionary with the key 'rating__avg'
+            score = Review.objects.filter(
+                entry=object).aggregate(Avg('rating'))
+            # returns the actual average score value
+            average_score = score['rating__avg']
+            # print(average_score)
+
+            # round all float instances to 1 decimal, and replace all NoneType with 0
+            if isinstance(average_score, float):
+                average_score = round(average_score, 1)
+                print(average_score)
+            else:
+                average_score = 0
+            additional_info_2[object.id] = average_score
+
+        context['additional_info_2'] = additional_info_2
+
+        print('CONTEXT --->', context)
+        print()
 
         return context
 
@@ -232,23 +252,22 @@ class EntryUpdateView(LoginRequiredMixin, generic.UpdateView):
     queryset = Entry.objects.all()
     form_class = EntryModelForm
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+
         # pass the number of reviews left to this entry via the context
         # so we can restrict updating for entries who have received more than one review;
         entry_object = self.get_object()
         entry_reviews = Review.objects.filter(entry=entry_object)
         entry_reviews_number = len(entry_reviews)
         context['entry_reviews_number'] = entry_reviews_number
-        
+
         # check to see if the user logged in is also the creator of the entry
         user_logged_in = self.request.user
         user_entry = entry_object.user
-        are_users_the_same = user_logged_in==user_entry
+        are_users_the_same = user_logged_in == user_entry
         print('Are users the same?', are_users_the_same)
-        context['are_users_the_same']=are_users_the_same
+        context['are_users_the_same'] = are_users_the_same
         print(context)
         return context
 
@@ -269,12 +288,12 @@ class EntryDeleteView(LoginRequiredMixin, generic.DeleteView):
         entry_object = self.get_object()
         user_logged_in = self.request.user
         user_entry = entry_object.user
-        are_users_the_same = user_logged_in==user_entry
+        are_users_the_same = user_logged_in == user_entry
         print('Are users the same?', are_users_the_same)
-        context['are_users_the_same']=are_users_the_same
+        context['are_users_the_same'] = are_users_the_same
         print(context)
         return context
-    
+
     def get_success_url(self):
         return reverse("entries:entry-list")
 

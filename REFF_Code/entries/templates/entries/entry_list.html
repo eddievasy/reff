@@ -154,7 +154,10 @@
                                 </div>
                                 <div class="flex-grow truncate">
                                     <!-- Below, additional_info is a dictionary, get_value is our custom filter and entry is the key to lookup in the dictionary -->
-                                    <h2 class="text-gray-900 text-lg title-font font-medium mb-3">{{ additional_info|get_value:entry.id }} : 0
+                                    <!-- <div class="font-bold">{{ additional_info_2|get_value:entry.id }} </div> -->
+                                    <div class="Stars" style="--rating: {{ additional_info_2|get_value:entry.id }};" aria-label="Star rating"></div>
+                                    {% include 'entries/star_rating.html' %}
+                                    <h2 class="text-gray-900 text-lg title-font font-medium mb-3"> {{ additional_info|get_value:entry.id }}
                                     </h2>
                                     <p class="leading-relaxed text-base">{{ entry.fact }}</p>
                                     <a href="{% url 'entry-detail-short-url' entry.short_url %}"
