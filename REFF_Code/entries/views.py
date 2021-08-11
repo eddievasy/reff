@@ -89,7 +89,21 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
             by_me = 'true'
 
         context['by_me'] = by_me
-        # print(context)
+        
+        additional_info = {}
+        
+        object_list = context['object_list']
+        for object in object_list:
+            domain_url = url_parser(object.source)
+            additional_info[object.id] = domain_url
+        
+        context['additional_info']=additional_info
+        
+        print('CONTEXT --->',context)
+        print()
+        
+        
+
 
         return context
 
@@ -122,7 +136,7 @@ class EntryDetailShortURLView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         entry = self.get_object()
         context['source_domain'] = url_parser(entry.source)
-        print(context)
+        # print(context)
         return context
 
     context_object_name = "entry"

@@ -12,7 +12,7 @@
                 <div class="flex mb-4">
                     <a href="{% url 'entry-detail-short-url' entry.short_url %}"
                         class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Fact</a>
-                    <a class="flex-grow text-blue-500 border-b-2 border-blue-500 py-2 text-lg px-1">Review</a>
+                    <a class="flex-grow text-blue-500 border-b-2 border-blue-500 py-2 text-lg px-1 font-semibold">Review</a>
                     <a href="{% url 'entries:entry-update' entry.pk %}"
                         class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Update</a>
                 </div>
@@ -41,7 +41,7 @@
                     {{ form|crispy }}
                     <div class='flex-row'>
                         <button
-                            class="text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded">Submit</button>
+                            class="text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded font-semibold">Submit</button>
                     </div>
                 </form>
                 {% else %}

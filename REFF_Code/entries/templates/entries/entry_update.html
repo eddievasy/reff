@@ -15,7 +15,7 @@
                     <a href="{% url 'entries:review-create' entry.pk %}"
                         class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Review</a>
                     <a href="{% url 'entries:entry-update' entry.pk %}"
-                        class="flex-grow text-blue-500 border-b-2 border-blue-500 py-2 text-lg px-1">Update</a>
+                        class="flex-grow text-blue-500 border-b-2 border-blue-500 py-2 text-lg px-1 font-semibold">Update</a>
                 </div>
                 {% if are_users_the_same == True %}
                 {% if entry_reviews_number == 0 %}
