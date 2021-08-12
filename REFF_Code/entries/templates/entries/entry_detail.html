@@ -18,7 +18,8 @@
         <p class="leading-relaxed mb-4 font-mono italic">{{ entry.fact }}</p>
         <div class="flex border-t border-gray-200 py-2">
           <span class="text-blue-500">Source</span>
-          <span class="ml-auto text-gray-900 font-semibold text-blue-500 hover:text-blue-800"><a href="{{ entry.source }}">{{ source_domain }}</a></span>
+          <span class="ml-auto text-gray-900 font-semibold text-blue-500 hover:text-blue-800"><a
+              href="{{ entry.source }}">{{ source_domain }}</a></span>
         </div>
         <div class="flex border-t border-gray-200 py-2">
           <span class="text-gray-500">Created by</span>
@@ -34,9 +35,10 @@
         </div>
         <div class="flex">
           <span class="title-font font-medium text-2xl text-gray-900">Score: {{ average_score }}</span>
-          <button
-            class="flex ml-auto text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded font-semibold">See
-            reviews</button>
+          <a class="flex ml-auto text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded"
+            href="{% url 'entries:review-list' %}?id={{ entry.id }}">
+            <button class="font-semibold">See
+              reviews</button> </a>
           <button
             class="rounded-full w-10 h-10 bg-gray-200 hover:bg-gray-300 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
             <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5"
@@ -55,7 +57,7 @@
               <rect x="9" y="3" width="6" height="4" rx="2" />
             </svg>
           </button>
-          
+
           <script>
             function copyToClipboard(text) {
               var inputc = document.body.appendChild(document.createElement("input"));

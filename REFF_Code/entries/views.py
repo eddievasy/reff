@@ -1,7 +1,7 @@
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
-from entries.models import Entry, Review
+from entries.models import Entry, Review, User
 from entries.forms import EntryForm, EntryModelForm, CustomUserCreationForm, ReviewModelForm
 # folder contains TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views import generic
@@ -130,7 +130,62 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
 
 # Class view
 
-# class ReviewListView(LoginRequiredMixin, generic.ListView):
+class ReviewListView(LoginRequiredMixin, generic.ListView):
+    template_name="entries/review_list.html"
+    # Declare the number of entries per page
+    paginate_by = 10
+    
+    def get_queryset(self):
+        # Get the entry id of the entry we want to see the reviews for
+        entry_id = self.request.GET['id']
+        
+        # check to see if there is a 'search' parameter in the URL
+        if 'search' in self.request.GET.keys():
+            # fetch all reviews for that specific entry_id which contain the search parameter
+            reviews = Review.objects.filter(entry_id=entry_id)
+            comment=self.request.GET['search']
+            reviews = reviews.filter(comment__contains=comment)
+        else:
+            # fetch all reviews for that specific entry_id
+            reviews = Review.objects.filter(entry_id=entry_id)
+            
+        # order all reviews to show the last ones created first 
+        reviews = reviews.order_by('-date_created')
+
+        return reviews
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+    
+        
+        # get the object_list in order to generate a new dictionary which contains user names
+        object_list=context['object_list']
+        # use this dictionary to store user names
+        additional_info = {}
+        
+        # for each review id, attach a value corresponding to the username of the user that left the review
+        for object in object_list:
+            user_id=object.user_id
+            username = User.objects.get(id=user_id).username
+            additional_info[object.id]=username
+        
+        # add dictionary to the context so we can use it in the template
+        context['additional_info']=additional_info
+        
+        # Get the entry id of the entry we want to see the reviews for
+        entry_id = self.request.GET['id']
+        entry_short_url = Entry.objects.get(id=entry_id).short_url
+        # add entry_short_url to context
+        context['entry_short_url']=entry_short_url
+        # add entry_id to context
+        context['entry_id']=entry_id
+        
+        # add the number of reviews to the context
+        context["num_reviews"] = len(self.get_queryset())
+        
+        # print(context)
+        
+        return context
 
 # Class view
 # We won't restrict this view from being accessed by non-users because we want it to be accessible across the web

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from entries.views import entry_list, entry_detail, entry_create, entry_update, entry_delete, review_create, EntryListView, EntryDetailView, EntryCreateView, EntryUpdateView, EntryDeleteView, MyEntryListView, EntryListByCategoryView, MyEntryListByCategoryView, ReviewCreateView
+from entries.views import entry_list, entry_detail, entry_create, entry_update, entry_delete, review_create, EntryListView, EntryDetailView, EntryCreateView, EntryUpdateView, EntryDeleteView, MyEntryListView, EntryListByCategoryView, MyEntryListByCategoryView, ReviewCreateView, ReviewListView
 
 app_name = "entries"
 
@@ -19,6 +19,7 @@ urlpatterns = [
     path('update-<int:pk>/', EntryUpdateView.as_view(), name='entry-update'),
     path('delete-<int:pk>/', EntryDeleteView.as_view(), name='entry-delete'),
     path('review-<int:pk>/', review_create, name='review-create'),
+    path('reviews/', ReviewListView.as_view(), name='review-list'),
     # the paths below have been implemented through the entry-list path using '?param=xXx' parameters instead
     # path('category-<str:category>/', EntryListByCategoryView.as_view(), name='entry-list-by-category'),
     # path('mine/<str:category>/', MyEntryListByCategoryView.as_view(), name='my-entry-list-by-category')
