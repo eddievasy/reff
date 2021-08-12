@@ -13,6 +13,14 @@ User = get_user_model()
 
 
 class EntryModelForm(forms.ModelForm):
+    
+    fact = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={"placeholder": "Please describe the fact you believe to be accurate",}
+        ),
+    )
+    
     class Meta:
         # Specify which model we're using
         model = Entry
@@ -26,8 +34,16 @@ class EntryModelForm(forms.ModelForm):
 
 
 class ReviewModelForm(forms.ModelForm):
+    
+    # Create placeholder text for the comment area of the review
+    comment = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={"placeholder": "Describe how well the source verifies the accuracy of the fact being stated",}
+        ),
+    )
+    
     # add validation for the 'rating' field
-
     # the format of the validation functions is clean_field_name()
     def clean_rating(self):
         rating = self.cleaned_data['rating']
@@ -47,7 +63,8 @@ class ReviewModelForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ('comment', 'rating',)
-        help_texts = {'rating': 'Enter a value between 0 and 5, which is a multiple of 0.5'}
+        help_texts = {'rating': 'Select a value between 0 and 5'}
+        
 
 
 # The below form is the more comprehensive way of using forms in Django;

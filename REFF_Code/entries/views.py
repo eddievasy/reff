@@ -129,6 +129,10 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
 
 
 # Class view
+
+# class ReviewListView(LoginRequiredMixin, generic.ListView):
+
+# Class view
 # We won't restrict this view from being accessed by non-users because we want it to be accessible across the web
 
 
