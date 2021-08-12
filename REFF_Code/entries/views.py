@@ -70,6 +70,13 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
             if by_me == 'true':
                 entry_user = self.request.user
                 entries = entries.filter(user=entry_user)
+        
+        # if the search function is being used, further filter the queryset        
+        if 'search' in self.request.GET.keys():
+            search_keyword=self.request.GET['search']
+            entries=entries.filter(fact__contains=search_keyword)
+                    
+        
         return entries
 
     def get_context_data(self, **kwargs):
@@ -143,8 +150,8 @@ class ReviewListView(LoginRequiredMixin, generic.ListView):
         if 'search' in self.request.GET.keys():
             # fetch all reviews for that specific entry_id which contain the search parameter
             reviews = Review.objects.filter(entry_id=entry_id)
-            comment=self.request.GET['search']
-            reviews = reviews.filter(comment__contains=comment)
+            search_keyword=self.request.GET['search']
+            reviews = reviews.filter(comment__contains=search_keyword)
         else:
             # fetch all reviews for that specific entry_id
             reviews = Review.objects.filter(entry_id=entry_id)
