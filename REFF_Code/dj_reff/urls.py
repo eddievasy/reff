@@ -19,7 +19,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
-from entries.views import EntryDetailShortURLView, TestingView
+from entries.views import EntryDetailShortURLView, TestingView, EntryFillView
 
 
 urlpatterns = [
@@ -39,6 +39,7 @@ urlpatterns = [
          PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('password-reset-complete/', PasswordResetCompleteView.as_view(),
          name='password_reset_complete'),
+    path('fill-<str:short_url>/', EntryFillView.as_view(), name='entry-fill'),
     # the following path needs to stay last, otherwise the it would raise an error
     path('<str:short_url>/', EntryDetailShortURLView.as_view(),
          name='entry-detail-short-url'),

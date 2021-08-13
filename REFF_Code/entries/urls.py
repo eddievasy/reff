@@ -18,7 +18,8 @@ urlpatterns = [
     # or the primary key can be declared as <int: pk>
     path('<int:pk>/', EntryDetailView.as_view(), name='entry-detail'),
     path('update-<int:pk>/', EntryUpdateView.as_view(), name='entry-update'),
-    path('fill-<str:short_url>/', EntryFillView.as_view(), name='entry-fill'),
+    # the path below has been added to the parent urls.py file;
+    # path('fill-<str:short_url>/', EntryFillView.as_view(), name='entry-fill'),
     path('delete-<int:pk>/', EntryDeleteView.as_view(), name='entry-delete'),
     path('review-<int:pk>/', review_create, name='review-create'),
     path('reviews/', ReviewListView.as_view(), name='review-list'),

@@ -264,7 +264,7 @@ class RequestEntryCreateView(LoginRequiredMixin, generic.CreateView):
     def get_success_url(self):
         # print(self.object())
         print(self.object.short_url)
-        return reverse("entries:entry-fill", kwargs={"short_url": self.object.short_url})
+        return reverse("entry-fill", kwargs={"short_url": self.object.short_url})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
