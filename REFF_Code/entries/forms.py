@@ -15,7 +15,7 @@ User = get_user_model()
 class EntryModelForm(forms.ModelForm):
     
     fact = forms.CharField(
-        required=False,
+        required=True,
         widget=forms.Textarea(
             attrs={"placeholder": "Please describe the fact you believe to be accurate",}
         ),
@@ -32,12 +32,39 @@ class EntryModelForm(forms.ModelForm):
             'category',
         )
 
+class FillEntryModelForm(forms.ModelForm):
+    class Meta:
+        # Specify which model we're using
+        model = Entry
+
+        # Specify the fields we want to use in the form
+        fields = (
+            'fact', 'source', 'category'
+        )
+    
+
+class RequestEntryModelForm(forms.ModelForm):
+    fact = forms.CharField(
+        required=True,
+        widget=forms.Textarea(
+            attrs={"placeholder": "Please describe the fact you'd like to get a source for",}
+        ),
+    )
+    
+    class Meta:
+        # Specify which model we're using
+        model = Entry
+
+        # Specify the fields we want to use in the form
+        fields = (
+            'fact',
+        )
 
 class ReviewModelForm(forms.ModelForm):
     
     # Create placeholder text for the comment area of the review
     comment = forms.CharField(
-        required=False,
+        required=True,
         widget=forms.Textarea(
             attrs={"placeholder": "Describe how well the source verifies the accuracy of the fact being stated",}
         ),

@@ -2,7 +2,7 @@ from django.core.mail import send_mail
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from entries.models import Entry, Review, User
-from entries.forms import EntryForm, EntryModelForm, CustomUserCreationForm, ReviewModelForm
+from entries.forms import EntryForm, EntryModelForm, CustomUserCreationForm, ReviewModelForm, RequestEntryModelForm, FillEntryModelForm
 # folder contains TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views import generic
 # we'll use this class to verify that the current user is authenticated
@@ -20,6 +20,8 @@ from django.core.paginator import Paginator, EmptyPage
 # we need to use Avg to calculate the average scores
 from django.db.models import Avg
 
+# use this method for passing the current date and time when filling a request-type entry
+from datetime import datetime
 
 # Generally speaking, web pages follow the CRUD+L format: Create, Retrieve, Updated, Delete and List
 
@@ -70,13 +72,15 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
             if by_me == 'true':
                 entry_user = self.request.user
                 entries = entries.filter(user=entry_user)
-        
-        # if the search function is being used, further filter the queryset        
+
+        # if the search function is being used, further filter the queryset
         if 'search' in self.request.GET.keys():
-            search_keyword=self.request.GET['search']
-            entries=entries.filter(fact__contains=search_keyword)
-                    
+            search_keyword = self.request.GET['search']
+            entries = entries.filter(fact__contains=search_keyword)
         
+        # make sure only the full entries are included (not the request-type entries)
+        entries=entries.filter(normal_entry=True)
+
         return entries
 
     def get_context_data(self, **kwargs):
@@ -136,62 +140,60 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
 
 
 # Class view
-
 class ReviewListView(LoginRequiredMixin, generic.ListView):
-    template_name="entries/review_list.html"
+    template_name = "entries/review_list.html"
     # Declare the number of entries per page
     paginate_by = 10
-    
+
     def get_queryset(self):
         # Get the entry id of the entry we want to see the reviews for
         entry_id = self.request.GET['id']
-        
+
         # check to see if there is a 'search' parameter in the URL
         if 'search' in self.request.GET.keys():
             # fetch all reviews for that specific entry_id which contain the search parameter
             reviews = Review.objects.filter(entry_id=entry_id)
-            search_keyword=self.request.GET['search']
+            search_keyword = self.request.GET['search']
             reviews = reviews.filter(comment__contains=search_keyword)
         else:
             # fetch all reviews for that specific entry_id
             reviews = Review.objects.filter(entry_id=entry_id)
-            
-        # order all reviews to show the last ones created first 
+
+        # order all reviews to show the last ones created first
         reviews = reviews.order_by('-date_created')
 
         return reviews
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-    
-        
+
         # get the object_list in order to generate a new dictionary which contains user names
-        object_list=context['object_list']
+        object_list = context['object_list']
         # use this dictionary to store user names
         additional_info = {}
-        
+
         # for each review id, attach a value corresponding to the username of the user that left the review
         for object in object_list:
-            user_id=object.user_id
+            user_id = object.user_id
             username = User.objects.get(id=user_id).username
-            additional_info[object.id]=username
-        
+            additional_info[object.id] = username
+
         # add dictionary to the context so we can use it in the template
-        context['additional_info']=additional_info
-        
+        context['additional_info'] = additional_info
+
         # Get the entry id of the entry we want to see the reviews for
         entry_id = self.request.GET['id']
         entry_short_url = Entry.objects.get(id=entry_id).short_url
         # add entry_short_url to context
-        context['entry_short_url']=entry_short_url
+        context['entry_short_url'] = entry_short_url
         # add entry_id to context
-        context['entry_id']=entry_id
-        
+        context['entry_id'] = entry_id
+
         # add the number of reviews to the context
         context["num_reviews"] = len(self.get_queryset())
-        
+
         # print(context)
-        
+
         return context
 
 # Class view
@@ -223,7 +225,7 @@ class EntryDetailShortURLView(generic.DetailView):
         entry = self.get_object()
         context['source_domain'] = url_parser(entry.source)
         # print(context)
-        
+
         # Add 'average_score' to context
         # returns a dictionary with the key 'rating__avg'
         score = Review.objects.filter(
@@ -237,21 +239,57 @@ class EntryDetailShortURLView(generic.DetailView):
             # print(average_score)
         else:
             average_score = 0
-        context['average_score']=average_score
-        
+        context['average_score'] = average_score
+
         # Add 'reviews_number' to context
         # print(Review.objects.filter(entry=entry))
-        reviews_number=len(Review.objects.filter(entry=entry))
+        reviews_number = len(Review.objects.filter(entry=entry))
         # print(reviews_number)
-        context['reviews_number']=reviews_number
-        
+        context['reviews_number'] = reviews_number
+
         print(context)
-        
+
         return context
-    
-        
 
     context_object_name = "entry"
+
+
+# Class view
+
+class RequestEntryCreateView(LoginRequiredMixin, generic.CreateView):
+    template_name = "entries/request_entry_create.html"
+    form_class = RequestEntryModelForm
+
+    
+    def get_success_url(self):
+        # print(self.object())
+        print(self.object.short_url)
+        return reverse("entries:entry-fill", kwargs={"short_url": self.object.short_url})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def form_valid(self, form):
+        # Assign the current logged in user to the entry
+        entry = form.save(commit=False)
+        entry.user = self.request.user
+        # Generate random short URL
+        random_short_url = url_generator()
+        # Check if the random short URL already exists in the DB for another entry
+        identical_urls = Entry.objects.filter(
+            short_url=random_short_url).count()
+        # print('>>>>> Number of idential short URLs =',identical_urls)
+        # If it already exists, re-generate it
+        if(identical_urls > 0):
+            random_short_url = url_generator()
+        # Assign short URL to the new entry
+        entry.short_url = random_short_url
+        # This is not a normal entry yet, so turn make it False
+        entry.normal_entry = False
+        entry.save()
+
+        return super(RequestEntryCreateView, self).form_valid(form)
 
 
 # Class view
@@ -335,6 +373,33 @@ def review_create(request, pk):
     }
     return render(request, "entries/review_create.html", context)
 
+# Class view
+
+
+class EntryFillView(LoginRequiredMixin, generic.UpdateView):
+    template_name = "entries/entry_fill.html"
+    queryset = Entry.objects.all()
+    form_class = FillEntryModelForm
+        
+    def get_success_url(self):
+        short_url = self.get_object().short_url
+        return reverse("entry-detail-short-url", kwargs={'short_url': short_url})
+    
+    def get_object(self, queryset=None):
+        short_url = self.kwargs['short_url']
+        entry = Entry.objects.get(short_url=short_url)
+        return entry
+    
+    def form_valid(self, form):
+        # Assign the current logged in user to the entry (different to the user that created the request-type entry)
+        entry = form.save(commit=False)
+        entry.user = self.request.user
+        # change normal_entry to True, since it contains all the info now
+        entry.normal_entry = True
+        # update the time and date of the creation
+        entry.date_created = datetime.now()
+        entry.save()
+        return super(EntryFillView, self).form_valid(form)
 
 # Class view
 

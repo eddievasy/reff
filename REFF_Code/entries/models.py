@@ -40,6 +40,7 @@ class Entry(models.Model):
     short_url = models.CharField(max_length=7, null=True, unique=True)
     category = models.CharField(choices=CATEGORY, max_length=100)
     date_created = models.DateTimeField(auto_now_add=True)
+    normal_entry = models.BooleanField(default=True)
 
     # Foreign Keys relationships
     user = models.ForeignKey("User", on_delete=models.CASCADE)

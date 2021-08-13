@@ -1,5 +1,3 @@
-possible_remainders = []
-for i in range(11):
-  possible_remainders.append(i)
+from datetime import datetime
 
-print(possible_remainders)
+print(datetime.now())
