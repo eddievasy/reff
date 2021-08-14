@@ -1,7 +1,7 @@
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
-from entries.models import Entry, Review, User
+from entries.models import Entry, Review, User, Like
 from entries.forms import EntryForm, EntryModelForm, CustomUserCreationForm, ReviewModelForm, RequestEntryModelForm, FillEntryModelForm
 # folder contains TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views import generic
@@ -77,9 +77,9 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
         if 'search' in self.request.GET.keys():
             search_keyword = self.request.GET['search']
             entries = entries.filter(fact__contains=search_keyword)
-        
+
         # make sure only the full entries are included (not the request-type entries)
-        entries=entries.filter(normal_entry=True)
+        entries = entries.filter(normal_entry=True)
 
         return entries
 
@@ -205,6 +205,51 @@ class EntryDetailView(generic.DetailView):
     queryset = Entry.objects.all()
     context_object_name = "entry"
 
+# Class view
+
+# class LikeEntryView(generic.DetailView):
+#     template_name = "entries/entry_detail.html"
+
+#     # return the Entry which has the corresponding short URL
+
+#     def get_object(self, queryset=None):
+#         short_url = self.kwargs['short_url']
+#         entry = Entry.objects.get(short_url=short_url)
+#         return entry
+
+#     # pass the source_domain through the context to the HTML template
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         entry = self.get_object()
+#         context['source_domain'] = url_parser(entry.source)
+#         # print(context)
+
+#         # Add 'average_score' to context
+#         # returns a dictionary with the key 'rating__avg'
+#         score = Review.objects.filter(
+#             entry=entry).aggregate(Avg('rating'))
+#         # returns the actual average score value
+#         average_score = score['rating__avg']
+#         # print(average_score)
+#         # round all float instances to 1 decimal, and replace all NoneType with 0
+#         if isinstance(average_score, float):
+#             average_score = round(average_score, 1)
+#             # print(average_score)
+#         else:
+#             average_score = 0
+#         context['average_score'] = average_score
+
+#         # Add 'reviews_number' to context
+#         # print(Review.objects.filter(entry=entry))
+#         reviews_number = len(Review.objects.filter(entry=entry))
+#         # print(reviews_number)
+#         context['reviews_number'] = reviews_number
+
+#         print(context)
+
+#         return context
+
+#     context_object_name = "entry"
 
 # Class view
 
@@ -247,6 +292,48 @@ class EntryDetailShortURLView(generic.DetailView):
         # print(reviews_number)
         context['reviews_number'] = reviews_number
 
+        if 'like' in self.request.GET.keys():
+            like_type = self.request.GET['like']
+            print('Like type: ', like_type)
+            # for like creation
+            if like_type == 'yes':        
+                # check to see if the like already exists
+                try:
+                    like = Like.objects.get(
+                        user=self.request.user,
+                        entry=entry,
+                    )
+                # if the the above look up raises an error
+                # it means that the like doesn't exist
+                # so we create one;
+                except:
+                    like = Like.objects.create(
+                        user=self.request.user,
+                        entry=entry,
+                    )
+            # for like deletion
+            elif like_type == 'no':
+                # Only delete the like if it already exists in the database
+                try:
+                    like = Like.objects.get(
+                        user=self.request.user,
+                        entry=entry,
+                    )
+                    like.delete()
+                except:
+                    print("Like cannot be unliked because it doesn't exist in the database")
+        
+        # add to context whether or not this entry has been liked by the currently logged in user
+        try:
+            like = Like.objects.get(
+                user=self.request.user,
+                entry=entry,
+            )
+            context['already_liked']='yes'
+        except:
+            context['already_liked']='no'
+        
+        
         print(context)
 
         return context
@@ -260,7 +347,6 @@ class RequestEntryCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = "entries/request_entry_create.html"
     form_class = RequestEntryModelForm
 
-    
     def get_success_url(self):
         # print(self.object())
         print(self.object.short_url)
@@ -380,16 +466,16 @@ class EntryFillView(LoginRequiredMixin, generic.UpdateView):
     template_name = "entries/entry_fill.html"
     queryset = Entry.objects.all()
     form_class = FillEntryModelForm
-        
+
     def get_success_url(self):
         short_url = self.get_object().short_url
         return reverse("entry-detail-short-url", kwargs={'short_url': short_url})
-    
+
     def get_object(self, queryset=None):
         short_url = self.kwargs['short_url']
         entry = Entry.objects.get(short_url=short_url)
         return entry
-    
+
     def form_valid(self, form):
         # Assign the current logged in user to the entry (different to the user that created the request-type entry)
         entry = form.save(commit=False)

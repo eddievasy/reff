@@ -70,6 +70,16 @@ class Review(models.Model):
         return str(self.rating)
 
 
+class Like(models.Model):
+
+    entry = models.ForeignKey("Entry", on_delete=models.CASCADE)
+    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "user[" + str(self.user) + "] LIKED entry[" + str(self.entry) + "]"
+
+
 # Not relevant anymore:
 # class UserProfile(models.Model):
 #     user = models.OneToOneField(User, on_delete=models.CASCADE)
