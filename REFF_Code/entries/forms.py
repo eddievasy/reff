@@ -33,6 +33,11 @@ class EntryModelForm(forms.ModelForm):
         )
 
 class FillEntryModelForm(forms.ModelForm):
+    fact = forms.CharField(
+        required=True,
+        widget=forms.Textarea(),
+    )
+    
     class Meta:
         # Specify which model we're using
         model = Entry
