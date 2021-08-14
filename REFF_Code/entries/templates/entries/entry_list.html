@@ -33,24 +33,24 @@
                             onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
                             class="appearance-none h-full rounded-l border block appearance-none w-full bg-white border-gray-400 text-gray-700 py-2 px-7 pr-20 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                             <option>Select category</option>
-                            <option value="{% url 'entries:entry-list' %}?&category=all&by_me={{ by_me }}">All</option>
-                            <option value="{% url 'entries:entry-list' %}?&category=Tech&by_me={{ by_me }}">Tech
+                            <option value="{% url 'entries:entry-list' %}?&category=all&by_me={{ by_me }}&likes={{ likes }}">All</option>
+                            <option value="{% url 'entries:entry-list' %}?&category=Tech&by_me={{ by_me }}&likes={{ likes }}">Tech
                             </option>
-                            <option value="{% url 'entries:entry-list' %}?&category=Health&by_me={{ by_me }}">Health
+                            <option value="{% url 'entries:entry-list' %}?&category=Health&by_me={{ by_me }}&likes={{ likes }}">Health
                             </option>
-                            <option value="{% url 'entries:entry-list' %}?&category=Politics&by_me={{ by_me }}">Politics
+                            <option value="{% url 'entries:entry-list' %}?&category=Politics&by_me={{ by_me }}&likes={{ likes }}">Politics
                             </option>
-                            <option value="{% url 'entries:entry-list' %}?&category=History&by_me={{ by_me }}">History
+                            <option value="{% url 'entries:entry-list' %}?&category=History&by_me={{ by_me }}&likes={{ likes }}">History
                             </option>
-                            <option value="{% url 'entries:entry-list' %}?&category=Education&by_me={{ by_me }}">
+                            <option value="{% url 'entries:entry-list' %}?&category=Education&by_me={{ by_me }}&likes={{ likes }}">
                                 Education</option>
-                            <option value="{% url 'entries:entry-list' %}?&category=Sports&by_me={{ by_me }}">Sports
+                            <option value="{% url 'entries:entry-list' %}?&category=Sports&by_me={{ by_me }}&likes={{ likes }}">Sports
                             </option>
-                            <option value="{% url 'entries:entry-list' %}?&category=Business&by_me={{ by_me }}">Business
+                            <option value="{% url 'entries:entry-list' %}?&category=Business&by_me={{ by_me }}&likes={{ likes }}">Business
                             </option>
-                            <option value="{% url 'entries:entry-list' %}?&category=Science&by_me={{ by_me }}">Science
+                            <option value="{% url 'entries:entry-list' %}?&category=Science&by_me={{ by_me }}&likes={{ likes }}">Science
                             </option>
-                            <option value="{% url 'entries:entry-list' %}?&category=Other&by_me={{ by_me }}">Other
+                            <option value="{% url 'entries:entry-list' %}?&category=Other&by_me={{ by_me }}&likes={{ likes }}">Other
                             </option>
 
                         </select>
@@ -78,6 +78,7 @@
                         action="{% url 'entries:entry-list' %}" method="get">
                         <input type="hidden" name="category" value="{{ category }}">
                         <input type="hidden" name="by_me" value="{{ by_me }}">
+                        <input type="hidden" name="likes" value="{{ likes }}">
                         <input name="search" type="text" placeholder="Search entries">
                     </form>
                 </div>
@@ -189,7 +190,7 @@
                         <div class="inline-flex mt-2 xs:mt-0">
                             {% if page_obj.has_previous %}
                             <a
-                                href="{% url 'entries:entry-list' %}?page={{ page_obj.previous_page_number }}&category={{ category }}&by_me={{ by_me }}">
+                                href="{% url 'entries:entry-list' %}?page={{ page_obj.previous_page_number }}&category={{ category }}&by_me={{ by_me }}&likes={{ likes }}">
                                 <button
                                     class="text-sm bg-gray-200 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-l">
                                     Prev
@@ -198,7 +199,7 @@
                             {% endif %}
                             {% if page_obj.has_next %}
                             <a
-                                href="{% url 'entries:entry-list' %}?page={{ page_obj.next_page_number }}&category={{ category }}&by_me={{ by_me }}">
+                                href="{% url 'entries:entry-list' %}?page={{ page_obj.next_page_number }}&category={{ category }}&by_me={{ by_me }}&likes={{ likes }}">
                                 <button
                                     class="text-sm bg-gray-200 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-r">
                                     Next

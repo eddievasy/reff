@@ -1,4 +1,5 @@
 from django.core.mail import send_mail
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from entries.models import Entry, Review, User, Like
@@ -72,6 +73,23 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
             if by_me == 'true':
                 entry_user = self.request.user
                 entries = entries.filter(user=entry_user)
+                # print(entries)
+        
+        if 'likes' in self.request.GET.keys():
+            likes = self.request.GET['likes']
+            if likes == 'true':
+                entry_user = self.request.user
+                # fetch all the likes of the currently logged in user
+                likes = Like.objects.filter(user=entry_user)
+                entry_id_list = list()
+                # save the entry id's corresponding to each like in a list
+                for like in likes:
+                    entry_id_list.append(like.entry_id)
+                # print(entry_id_list)
+                # filter the entries to only contain the ones liked by the user
+                entries=entries.filter(id__in=entry_id_list)
+                # print(entries)
+                
 
         # if the search function is being used, further filter the queryset
         if 'search' in self.request.GET.keys():
@@ -96,12 +114,18 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
         context["num_entries"] = len(self.get_queryset())
         # print(self.request.GET)
         # print('LENGTH ' + str(len(self.get_queryset())))
-        # default value for by_me is 'false'
+        # default value for parameter 'by_me' is 'false'
         by_me = 'false'
         if 'by_me' in self.request.GET.keys() and self.request.GET['by_me'] == 'true':
             by_me = 'true'
-
         context['by_me'] = by_me
+        
+        # default value for parameter 'likes' is 'false'    
+        likes = 'false'
+        if 'likes' in self.request.GET.keys() and self.request.GET['likes'] == 'true':
+            likes = 'true'
+        context['likes'] = likes
+        
 
         additional_info = {}
 
@@ -126,14 +150,14 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
             # round all float instances to 1 decimal, and replace all NoneType with 0
             if isinstance(average_score, float):
                 average_score = round(average_score, 1)
-                print(average_score)
+                # print(average_score)
             else:
                 average_score = 0
             additional_info_2[object.id] = average_score
 
         context['additional_info_2'] = additional_info_2
 
-        print('CONTEXT --->', context)
+        # print('CONTEXT --->', context)
         print()
 
         return context
