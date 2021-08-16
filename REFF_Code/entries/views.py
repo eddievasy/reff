@@ -426,8 +426,11 @@ class EntryCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = "entries/entry_create.html"
     form_class = EntryModelForm
 
+    
     def get_success_url(self):
-        return reverse("entries:entry-list")
+        # print(self.object())
+        print(self.object.short_url)
+        return reverse("entry-detail-short-url", kwargs={"short_url": self.object.short_url})
 
     def form_valid(self, form):
         # Assign the current logged in user to the entry
