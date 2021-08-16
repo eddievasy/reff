@@ -1,7 +1,18 @@
+{% if by_me == 'false' %}
+
 <label class="switch">
     <input type="checkbox" data-role="flipswitch" name="switch" id="switch">
     <span class="slider round"></span>
 </label>
+
+{% elif by_me == 'true' %}
+
+<label class="switch">
+    <input type="checkbox" checked="checked" data-role="flipswitch" name="switch" id="switch">
+    <span class="slider round"></span>
+</label>
+
+{% endif %}
 
 
 <script>

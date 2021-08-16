@@ -84,8 +84,14 @@
                         <input name="search" type="text" placeholder="Search entries">
                     </form>
                 </div>
-
             </div>
+            <div class="flex mt-3">
+                <h2 class="text-2xl font-semibold text-gray-400 leading-tight">My entries only</h2>
+                <div class="ml-3">
+                {% include "entries/switch_button_myentries.html" %}
+                </div>
+            </div>
+            
             <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
                 <div>
                     <div class="flex flex-wrap">
