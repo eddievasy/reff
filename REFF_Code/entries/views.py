@@ -41,6 +41,24 @@ class SignupView(generic.CreateView):
 
 class LandingPageView(generic.TemplateView):
     template_name = "landing.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # get all relevant data from DB to pass onto the context
+        num_entries = Entry.objects.count()
+        num_users = User.objects.count()
+        num_reviews = Review.objects.count()
+        num_likes = Like.objects.count()
+        
+        # add data to context
+        context['num_entries']=num_entries
+        context['num_users']=num_users
+        context['num_reviews']=num_reviews
+        context['num_likes']=num_likes
+        
+        print(context)
+        return context
 
 # Class view
 
