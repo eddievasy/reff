@@ -86,8 +86,8 @@
                                     Created at
                                 </th>
                                 <th
-                                    class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                    User
+                                    class="px-1 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    User & Expertise
                                 </th>
                             </tr>
                         </thead>
@@ -123,7 +123,78 @@
                                         {{ review.date_created | date:"d F Y" }}
                                     </p>
                                 </td>
+
                                 <td class="px-1 py-5 border-b border-gray-200 bg-white text-sm">
+
+                                    {% if review.expertise == 3 %}
+                                    <div class="flex flex-row">
+                                        <div class="mb-2 mx-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="icon icon-tabler icon-tabler-message-circle" width="24"
+                                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M22 9l-10 -4l-10 4l10 4l10 -4v6" />
+                                                <path d="M6 10.6v5.4a6 3 0 0 0 12 0v-5.4" />
+                                            </svg>
+                                        </div>
+                                        <div class="mb-2 mx-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="icon icon-tabler icon-tabler-message-circle" width="24"
+                                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path
+                                                    d="M10 19h-6a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1h6a2 2 0 0 1 2 2a2 2 0 0 1 2 -2h6a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-6a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2z" />
+                                                <path d="M12 5v16" />
+                                                <path d="M7 7h1" />
+                                                <path d="M7 11h1" />
+                                                <path d="M16 7h1" />
+                                                <path d="M16 11h1" />
+                                                <path d="M16 15h1" />
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    {% elif review.expertise == 1 %}
+
+                                    <div class="flex flex-row">
+                                        <div class="mb-2 mx-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="icon icon-tabler icon-tabler-message-circle" width="24"
+                                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M22 9l-10 -4l-10 4l10 4l10 -4v6" />
+                                                <path d="M6 10.6v5.4a6 3 0 0 0 12 0v-5.4" />
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    {% elif review.expertise == 2 %}
+
+                                    <div class="flex flex-row">
+                                        <div class="mb-2 mx-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="icon icon-tabler icon-tabler-message-circle" width="24"
+                                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path
+                                                    d="M10 19h-6a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1h6a2 2 0 0 1 2 2a2 2 0 0 1 2 -2h6a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-6a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2z" />
+                                                <path d="M12 5v16" />
+                                                <path d="M7 7h1" />
+                                                <path d="M7 11h1" />
+                                                <path d="M16 7h1" />
+                                                <path d="M16 11h1" />
+                                                <path d="M16 15h1" />
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    {% endif %}
+
+
                                     <span class="relative inline-block px-3 py-1 font-semibold leading-tight">
                                         <span aria-hidden
                                             class="absolute inset-0 bg-gray-200 opacity-50 rounded-full"></span>
@@ -136,7 +207,8 @@
                     </table>
                     <div class="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
                         <span class="text-xs xs:text-sm text-gray-900">
-                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} ({{ num_reviews }} total reviews)
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} ({{ num_reviews }} total
+                            reviews)
                         </span>
                         <div class="inline-flex mt-2 xs:mt-0">
                             {% if page_obj.has_previous %}
