@@ -58,8 +58,20 @@ class Review(models.Model):
         (0, 0), (1, 1), (2, 2),
         (3, 3), (4, 4), (5, 5)
     )
+    
+    VALUES_EXPERTISE = (
+        # Academic
+        (1,1),
+        # Professional
+        (2,2), 
+        # Academic and professional
+        (3,3),
+        # None
+        (0,0)
+    )
 
     rating = models.FloatField(choices=VALUES, default=0)
+    expertise = models.IntegerField(choices=VALUES_EXPERTISE)
     comment = models.CharField(max_length=400)
 
     entry = models.ForeignKey("Entry", on_delete=models.CASCADE)

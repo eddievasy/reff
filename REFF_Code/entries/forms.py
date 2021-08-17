@@ -76,7 +76,7 @@ class ReviewModelForm(forms.ModelForm):
         ),
     )
     
-    
+    # The validation below is no longer needed because the validation takes place at the template level for this field
     # add validation for the 'rating' field
     # the format of the validation functions is clean_field_name()
     # def clean_rating(self):
@@ -100,7 +100,7 @@ class ReviewModelForm(forms.ModelForm):
     # add validation for the comment field
     def clean_comment(self):
         comment = self.cleaned_data['comment']
-        if len(comment) > 10:
+        if len(comment) > 400:
             raise ValidationError('Comment cannot be longer than 400 characters.')
         return comment
     
@@ -115,7 +115,7 @@ class ReviewModelForm(forms.ModelForm):
 
     class Meta:
         model = Review
-        fields = ('comment', 'rating',)
+        fields = ('comment', 'rating', 'expertise')
         help_texts = {'rating': 'Select a value between 0 and 5'}
         
 

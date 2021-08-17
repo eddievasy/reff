@@ -477,13 +477,15 @@ def review_create(request, pk):
             print('CLEANED DATA ->',form.cleaned_data)
             comment = form.cleaned_data['comment']
             rating = form.cleaned_data['rating']
+            expertise = form.cleaned_data['expertise']
             user = request.user
             entry = entry_object
             Review.objects.create(
                 comment=comment,
                 rating=rating,
                 user=user,
-                entry=entry
+                entry=entry,
+                expertise=expertise
             )
             short_url = entry.short_url
             
