@@ -473,6 +473,8 @@ def review_create(request, pk):
     if request.method == "POST":
         form = ReviewModelForm(request.POST)
         if form.is_valid():
+            print('<< Form is valid >>')
+            print('CLEANED DATA ->',form.cleaned_data)
             comment = form.cleaned_data['comment']
             rating = form.cleaned_data['rating']
             user = request.user
@@ -484,7 +486,12 @@ def review_create(request, pk):
                 entry=entry
             )
             short_url = entry.short_url
+            
             return redirect(reverse("entry-detail-short-url", kwargs={"short_url": short_url}))
+        else:
+            print('<< Form is not valid >>')
+            print('CLEANED DATA ->',form.cleaned_data)
+            print('FORM ERRORS ->',form.errors)
 
     reviews_by_current_user = Review.objects.filter(
         entry=entry_object, user=request.user)

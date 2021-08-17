@@ -67,6 +67,7 @@ class RequestEntryModelForm(forms.ModelForm):
 
 class ReviewModelForm(forms.ModelForm):
     
+    
     # Create placeholder text for the comment area of the review
     comment = forms.CharField(
         required=True,
@@ -75,22 +76,42 @@ class ReviewModelForm(forms.ModelForm):
         ),
     )
     
+    
     # add validation for the 'rating' field
     # the format of the validation functions is clean_field_name()
-    def clean_rating(self):
-        rating = self.cleaned_data['rating']
-        # make sure the range is correct
-        if rating < 0 or rating > 5:
-            raise ValidationError('Acceptable values only: 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5')
-        # make sure the value is a multiple of 0.5
-        possible_remainders = []
-        for i in range(11):
-            possible_remainders.append(i)
-        remainder = rating / 0.5
-        if remainder not in possible_remainders:
-            raise ValidationError('Acceptable values only: 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5')
-        # always return the data
-        return rating
+    # def clean_rating(self):
+    #     rating = self.cleaned_data['rating']
+    #     print('RATING',rating)
+        
+    #     # # make sure the range is correct
+    #     # if rating < 0 or rating > 5:
+    #     #     raise ValidationError('Acceptable values only: 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5')
+    #     # # make sure the value is a multiple of 0.5
+    #     # possible_remainders = []
+    #     # for i in range(11):
+    #     #     possible_remainders.append(i)
+    #     # remainder = rating / 0.5
+    #     # if remainder not in possible_remainders:
+    #     #     raise ValidationError('Acceptable values only: 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5')
+    #     # always return the data
+            
+    #     return rating
+    
+    # add validation for the comment field
+    def clean_comment(self):
+        comment = self.cleaned_data['comment']
+        if len(comment) > 10:
+            raise ValidationError('Comment cannot be longer than 400 characters.')
+        return comment
+    
+    def clean(self):
+       cleaned_data = super().clean()
+       
+       # if the user doesn't select a value from 1 to 5, just assign 0 to the rating field
+       if 'rating' not in cleaned_data.keys():
+           cleaned_data['rating']=0
+       return cleaned_data
+            
 
     class Meta:
         model = Review

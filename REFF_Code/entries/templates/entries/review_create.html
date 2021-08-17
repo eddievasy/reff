@@ -32,15 +32,18 @@
                     <span class="ml-auto text-gray-900">{{ entry.date_created | date:"d F Y" }}</span>
                 </div>
                 
-                <form class="mt-5" method="POST">
-                    <!-- The csrf token below is good security implementation for form submission within Django -->
+                <!-- <form class="mt-5" method="POST">
+                    The csrf token below is good security implementation for form submission within Django
                     {% csrf_token %}
                     {{ form|crispy }}
                     <div class='flex-row'>
                         <button
                             class="text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded font-semibold">Leave review</button>
                     </div>
-                </form>
+                </form> -->
+
+                {% include "entries/review_create_form.html" %}
+                
                 {% else %}
                 <div class="flex flex-col md:pr-10 md:mb-0 mb-6 pr-0 w-full md:w-auto md:text-left text-center">
                     <h2 class="text-xs text-indigo-500 tracking-widest font-medium title-font mb-1">LIMIT REACHED</h2>
