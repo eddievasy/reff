@@ -22368,6 +22368,30 @@ video {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
+.font-shadows {
+  font-family: Shadows Into Light;
+}
+
+.font-cookie {
+  font-family: Cookie;
+}
+
+.font-epilogue {
+  font-family: Epilogue;
+}
+
+.font-source_sans_pro {
+  font-family: "Source Sans Pro";
+}
+
+.font-jet_brains_mono {
+  font-family: "JetBrains Mono";
+}
+
+.font-lobster {
+  font-family: Lobster;
+}
+
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
@@ -53947,6 +53971,30 @@ video {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 
+  .sm\:font-shadows {
+    font-family: Shadows Into Light;
+  }
+
+  .sm\:font-cookie {
+    font-family: Cookie;
+  }
+
+  .sm\:font-epilogue {
+    font-family: Epilogue;
+  }
+
+  .sm\:font-source_sans_pro {
+    font-family: "Source Sans Pro";
+  }
+
+  .sm\:font-jet_brains_mono {
+    font-family: "JetBrains Mono";
+  }
+
+  .sm\:font-lobster {
+    font-family: Lobster;
+  }
+
   .sm\:text-xs {
     font-size: 0.75rem;
     line-height: 1rem;
@@ -85172,6 +85220,30 @@ video {
 
   .md\:font-mono {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+
+  .md\:font-shadows {
+    font-family: Shadows Into Light;
+  }
+
+  .md\:font-cookie {
+    font-family: Cookie;
+  }
+
+  .md\:font-epilogue {
+    font-family: Epilogue;
+  }
+
+  .md\:font-source_sans_pro {
+    font-family: "Source Sans Pro";
+  }
+
+  .md\:font-jet_brains_mono {
+    font-family: "JetBrains Mono";
+  }
+
+  .md\:font-lobster {
+    font-family: Lobster;
   }
 
   .md\:text-xs {
@@ -116401,6 +116473,30 @@ video {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 
+  .lg\:font-shadows {
+    font-family: Shadows Into Light;
+  }
+
+  .lg\:font-cookie {
+    font-family: Cookie;
+  }
+
+  .lg\:font-epilogue {
+    font-family: Epilogue;
+  }
+
+  .lg\:font-source_sans_pro {
+    font-family: "Source Sans Pro";
+  }
+
+  .lg\:font-jet_brains_mono {
+    font-family: "JetBrains Mono";
+  }
+
+  .lg\:font-lobster {
+    font-family: Lobster;
+  }
+
   .lg\:text-xs {
     font-size: 0.75rem;
     line-height: 1rem;
@@ -147628,6 +147724,30 @@ video {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 
+  .xl\:font-shadows {
+    font-family: Shadows Into Light;
+  }
+
+  .xl\:font-cookie {
+    font-family: Cookie;
+  }
+
+  .xl\:font-epilogue {
+    font-family: Epilogue;
+  }
+
+  .xl\:font-source_sans_pro {
+    font-family: "Source Sans Pro";
+  }
+
+  .xl\:font-jet_brains_mono {
+    font-family: "JetBrains Mono";
+  }
+
+  .xl\:font-lobster {
+    font-family: Lobster;
+  }
+
   .xl\:text-xs {
     font-size: 0.75rem;
     line-height: 1rem;
@@ -178853,6 +178973,30 @@ video {
 
   .\32xl\:font-mono {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+
+  .\32xl\:font-shadows {
+    font-family: Shadows Into Light;
+  }
+
+  .\32xl\:font-cookie {
+    font-family: Cookie;
+  }
+
+  .\32xl\:font-epilogue {
+    font-family: Epilogue;
+  }
+
+  .\32xl\:font-source_sans_pro {
+    font-family: "Source Sans Pro";
+  }
+
+  .\32xl\:font-jet_brains_mono {
+    font-family: "JetBrains Mono";
+  }
+
+  .\32xl\:font-lobster {
+    font-family: Lobster;
   }
 
   .\32xl\:text-xs {
