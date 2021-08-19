@@ -65,6 +65,10 @@
     <h1 class="md:text-3xl text-2xl font-medium title-font text-gray-900">This request-type entry has already been
         filled out
     </h1>
+
+    <div class='mt-5 mb-10 border-t border-gray-500 pt-2'><a class="hover:text-blue-500 mt-3 text-xl"
+        href="{% url 'entry-detail-short-url' short_url=entry.short_url %}">Go to entry page</a></div>
+
 </div>
 {% endif %}
 
