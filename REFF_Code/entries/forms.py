@@ -15,15 +15,20 @@ User = get_user_model()
 class EntryModelForm(forms.ModelForm):
     
     fact = forms.CharField(
-        required=True,
+        required=True, label='Fact',
         widget=forms.Textarea(
-            attrs={"placeholder": "Please describe the fact you believe to be accurate",}
+            attrs={"placeholder": "Succintly state the fact you believe to be accurate",}
         ),
     )
+    
+    source = forms.URLField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Copy-paste the URL of the source here'})
+        )
     
     class Meta:
         # Specify which model we're using
         model = Entry
+        
+
 
         # Specify the fields we want to use in the form
         fields = (
@@ -31,12 +36,15 @@ class EntryModelForm(forms.ModelForm):
             'source',
             'category',
         )
+        
 
 class FillEntryModelForm(forms.ModelForm):
     fact = forms.CharField(
         required=True,
         widget=forms.Textarea(),
     )
+    source = forms.URLField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Copy-paste the URL of the source here'})
+        )
     
     class Meta:
         # Specify which model we're using
@@ -52,7 +60,7 @@ class RequestEntryModelForm(forms.ModelForm):
     fact = forms.CharField(
         required=True,
         widget=forms.Textarea(
-            attrs={"placeholder": "Please describe the fact you'd like to get a source for",}
+            attrs={"placeholder": "Succintly state the fact you'd like to request a source for",}
         ),
     )
     

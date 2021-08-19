@@ -7,7 +7,10 @@
 {% if entry.normal_entry == False %}
 <h1 class="text-4xl text-gray-800 mx-auto max-w-lg mt-5">Provide a valid source</h1>
 <h1 class="text-lg text-gray-800 mx-auto max-w-lg mt-5">
-    <div class="font-semibold text-xl text-blue-500">{{ entry.user }}</div> is kindly requesting that you complete the following fields:
+    <div class="font-semibold text-xl text-blue-500">{{ entry.user }}</div> is kindly requesting that you complete the
+    following fields:
+</h1>
+<h1 class="text-lg text-gray-800 mx-auto max-w-lg mt-5 pt-5 border-t"> The field below the contains fact in question. Amend if necessary.
 </h1>
 <div class="max-w-lg mx-auto mt-5">
     <!-- 'action="."' below indicated where the form is submitted. '.' means current URL -->
@@ -15,6 +18,13 @@
         <!-- The csrf token below is good security implementation for form submission within Django -->
         {% csrf_token %}
         {{ form|crispy }}
+
+        <!-- The styling below is to remove the asterisk from the mandatory fields -->
+        <style>
+            .asteriskField {
+                display: none;
+            }
+        </style>
 
         <button class="w-full bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md text-white" type="submit"> Submit
         </button>

@@ -11,10 +11,17 @@
         {% csrf_token %}
         {{ form|crispy }}
 
+        <!-- The styling below is to remove the asterisk from the mandatory fields -->
+        <style>
+            .asteriskField {
+                display: none;
+            }
+        </style>
         <button class="w-full bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md text-white" type="submit"> Submit
         </button>
     </form>
-    <div class='mt-5 mb-10 border-t border-gray-500 pt-2'><a class="hover:text-blue-500 mt-3 text-xl" href="{% url 'entries:entry-list' %}">Back to entry list</a></div>
+    <div class='mt-5 mb-10 border-t border-gray-500 pt-2'><a class="hover:text-blue-500 mt-3 text-xl"
+            href="{% url 'entries:entry-list' %}">Back to entry list</a></div>
 </div>
 
 {% endblock content %}
