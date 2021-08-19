@@ -23,6 +23,14 @@
                     <!-- The csrf token below is good security implementation for form submission within Django -->
                     {% csrf_token %}
                     {{ form|crispy }}
+
+                    <!-- The styling below is to remove the asterisk from the mandatory fields -->
+                    <style>
+                        .asteriskField {
+                            display: none;
+                        }
+                    </style>
+
                     <div class='flex-row'>
                         <button
                             class="text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded font-bold">Submit</button>
@@ -38,7 +46,7 @@
                         </h1>
                         <div class='flex-row py-4'>
                             <a class="w-full bg-red-500 hover:bg-red-700 px-3 py-3 rounded-md text-white font-bold"
-                            href="{% url 'entries:entry-delete' entry.pk %}">Delete</a>
+                                href="{% url 'entries:entry-delete' entry.pk %}">Delete</a>
                         </div>
                     </div>
                     {% endif %}
