@@ -31,7 +31,7 @@ class Entry(models.Model):
         ('Sports', 'Sports'),
         ('Business', 'Business'),
         ('Science', 'Science'),
-        ('Entertainment', 'Entertainment'),
+        ('Entertainment', 'Entertainment'), 
         ('Other', 'Other')
     )
 
