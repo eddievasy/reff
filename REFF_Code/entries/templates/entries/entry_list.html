@@ -35,24 +35,43 @@
                             onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
                             class="appearance-none h-full rounded-l border block appearance-none w-full bg-white border-gray-400 text-gray-700 py-2 px-7 pr-20 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                             <option>Select category</option>
-                            <option value="{% url 'entries:entry-list' %}?&category=all&by_me={{ by_me }}&likes={{ likes }}">All</option>
-                            <option value="{% url 'entries:entry-list' %}?&category=Tech&by_me={{ by_me }}&likes={{ likes }}">Tech
+                            <option
+                                value="{% url 'entries:entry-list' %}?&category=all&by_me={{ by_me }}&likes={{ likes }}">
+                                All</option>
+                            <option
+                                value="{% url 'entries:entry-list' %}?&category=Tech&by_me={{ by_me }}&likes={{ likes }}">
+                                Tech
                             </option>
-                            <option value="{% url 'entries:entry-list' %}?&category=Health&by_me={{ by_me }}&likes={{ likes }}">Health
+                            <option
+                                value="{% url 'entries:entry-list' %}?&category=Health&by_me={{ by_me }}&likes={{ likes }}">
+                                Health
                             </option>
-                            <option value="{% url 'entries:entry-list' %}?&category=Politics&by_me={{ by_me }}&likes={{ likes }}">Politics
+                            <option
+                                value="{% url 'entries:entry-list' %}?&category=Politics&by_me={{ by_me }}&likes={{ likes }}">
+                                Politics
                             </option>
-                            <option value="{% url 'entries:entry-list' %}?&category=History&by_me={{ by_me }}&likes={{ likes }}">History
+                            <option
+                                value="{% url 'entries:entry-list' %}?&category=History&by_me={{ by_me }}&likes={{ likes }}">
+                                History
                             </option>
-                            <option value="{% url 'entries:entry-list' %}?&category=Education&by_me={{ by_me }}&likes={{ likes }}">
+                            <option
+                                value="{% url 'entries:entry-list' %}?&category=Education&by_me={{ by_me }}&likes={{ likes }}">
                                 Education</option>
-                            <option value="{% url 'entries:entry-list' %}?&category=Sports&by_me={{ by_me }}&likes={{ likes }}">Sports
+                            <option
+                                value="{% url 'entries:entry-list' %}?&category=Sports&by_me={{ by_me }}&likes={{ likes }}">
+                                Sports
                             </option>
-                            <option value="{% url 'entries:entry-list' %}?&category=Business&by_me={{ by_me }}&likes={{ likes }}">Business
+                            <option
+                                value="{% url 'entries:entry-list' %}?&category=Business&by_me={{ by_me }}&likes={{ likes }}">
+                                Business
                             </option>
-                            <option value="{% url 'entries:entry-list' %}?&category=Science&by_me={{ by_me }}&likes={{ likes }}">Science
+                            <option
+                                value="{% url 'entries:entry-list' %}?&category=Science&by_me={{ by_me }}&likes={{ likes }}">
+                                Science
                             </option>
-                            <option value="{% url 'entries:entry-list' %}?&category=Other&by_me={{ by_me }}&likes={{ likes }}">Other
+                            <option
+                                value="{% url 'entries:entry-list' %}?&category=Other&by_me={{ by_me }}&likes={{ likes }}">
+                                Other
                             </option>
 
                         </select>
@@ -88,10 +107,10 @@
             <div class="flex mt-3">
                 <h2 class="text-2xl font-semibold text-gray-400 leading-tight">My entries only</h2>
                 <div class="ml-3">
-                {% include "entries/switch_button_myentries.html" %}
+                    {% include "entries/switch_button_myentries.html" %}
                 </div>
             </div>
-            
+
             <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
                 <div>
                     <div class="flex flex-wrap">
@@ -154,6 +173,16 @@
                                         <line x1="9" y1="3" x2="15" y2="3" />
                                         <line x1="10" y1="9" x2="14" y2="9" />
                                         <path d="M10 3v6l-4 11a0.7 .7 0 0 0 .5 1h11a0.7 .7 0 0 0 .5 -1l-4 -11v-6" />
+                                        {% elif entry.category == 'Entertainment' %}
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <rect x="4" y="4" width="16" height="16" rx="2" />
+                                        <line x1="8" y1="4" x2="8" y2="20" />
+                                        <line x1="16" y1="4" x2="16" y2="20" />
+                                        <line x1="4" y1="8" x2="8" y2="8" />
+                                        <line x1="4" y1="16" x2="8" y2="16" />
+                                        <line x1="4" y1="12" x2="20" y2="12" />
+                                        <line x1="16" y1="8" x2="20" y2="8" />
+                                        <line x1="16" y1="16" x2="20" y2="16" />
                                         {% elif entry.category == 'Other' %}
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path
@@ -171,7 +200,7 @@
                                     <div class="Stars" style="--rating: {{ additional_info_2|get_value:entry.id }};"
                                         aria-label="Star rating"></div>
                                     {% include 'entries/star_rating.html' %}
-                                    <h2 class="text-gray-900 text-lg title-font font-medium mb-3"> 
+                                    <h2 class="text-gray-900 text-lg title-font font-medium mb-3">
                                         {{ additional_info|get_value:entry.id }}
                                     </h2>
                                     <p class="leading-relaxed text-base">{{ entry.fact }}</p>
