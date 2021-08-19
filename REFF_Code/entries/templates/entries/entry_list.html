@@ -9,11 +9,11 @@
         <div class="mb-2 py-2 flex justify-between items-center border-b border-gray-200 w-full">
             <div>
                 {% if by_me == 'true' %}
-                <h1 class="text-4xl text-gray-800">My Entries</h1>
+                <h1 class="text-2xl text-gray-800">My Entries</h1>
                 {% elif likes == 'true' %}
-                <h1 class="text-4xl text-gray-800">My Likes</h1>
+                <h1 class="text-2xl text-gray-800">My Likes</h1>
                 {% else %}
-                <h1 class="text-4xl text-gray-800">Entries</h1>
+                <h1 class="text-2xl text-gray-800">Entries</h1>
                 {% endif %}
 
             </div>
@@ -25,11 +25,11 @@
             </div>
         </div>
         <div class="py-1">
+            <!-- OLD DROPDOWN CATEGORY SELECTOR
             <div>
                 <h2 class="text-2xl font-semibold text-gray-400 leading-tight">Category: {{ category }}</h2>
-            </div>
-            <div class="my-2 flex sm:flex-row flex-col">
-                <div class="flex flex-row mb-1 sm:mb-0">
+
+                <div class="flex flex-row mb-1 sm:mb-0 mt-2">
                     <div class="relative">
                         <select
                             onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);"
@@ -70,6 +70,10 @@
                                 Science
                             </option>
                             <option
+                                value="{% url 'entries:entry-list' %}?&category=Entertainment&by_me={{ by_me }}&likes={{ likes }}">
+                                Entertainment
+                            </option>
+                            <option
                                 value="{% url 'entries:entry-list' %}?&category=Other&by_me={{ by_me }}&likes={{ likes }}">
                                 Other
                             </option>
@@ -83,7 +87,161 @@
                             </svg>
                         </div>
                     </div>
+
                 </div>
+            </div> -->
+
+            <div class="w-full">
+                <div class="inline-block mr-2 mb-2">
+
+                    {% if category == 'all' %}
+                    <a href="{% url 'entries:entry-list' %}?&category=all&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 bg-blue-50 mt-2">
+                            All</button>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'entries:entry-list' %}?&category=all&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 hover:bg-blue-50 mt-2">
+                            All</button>
+                    </a>
+                    {% endif %}
+
+                    {% if category == 'Education' %}
+                    <a href="{% url 'entries:entry-list' %}?&category=Education&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 bg-blue-50 mt-2">
+                            Education</button>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'entries:entry-list' %}?&category=Education&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 hover:bg-blue-50 mt-2">
+                            Education</button>
+                    </a>
+                    {% endif %}
+
+                    {% if category == 'Entertainment' %}
+                    <a
+                        href="{% url 'entries:entry-list' %}?&category=Entertainment&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 bg-blue-50 mt-2">
+                            Entertainment</button>
+                    </a>
+                    {% else %}
+                    <a
+                        href="{% url 'entries:entry-list' %}?&category=Entertainment&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 hover:bg-blue-50 mt-2">
+                            Entertainment</button>
+                    </a>
+                    {% endif %}
+
+                    {% if category == 'Health' %}
+                    <a href="{% url 'entries:entry-list' %}?&category=Health&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 bg-blue-50 mt-2">
+                            Health</button>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'entries:entry-list' %}?&category=Health&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 hover:bg-blue-50 mt-2">
+                            Health</button>
+                    </a>
+                    {% endif %}
+
+                    {% if category == 'History' %}
+                    <a href="{% url 'entries:entry-list' %}?&category=History&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 bg-blue-50 mt-2">
+                            History</button>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'entries:entry-list' %}?&category=History&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 hover:bg-blue-50 mt-2">
+                            History</button>
+                    </a>
+                    {% endif %}
+
+                    {% if category == 'Politics' %}
+                    <a href="{% url 'entries:entry-list' %}?&category=Politics&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 bg-blue-50 mt-2">
+                            Politics</button>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'entries:entry-list' %}?&category=Politics&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 hover:bg-blue-50 mt-2">
+                            Politics</button>
+                    </a>
+                    {% endif %}
+
+                    {% if category == 'Science' %}
+                    <a href="{% url 'entries:entry-list' %}?&category=Science&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 bg-blue-50 mt-2">
+                            Science</button>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'entries:entry-list' %}?&category=Science&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 hover:bg-blue-50 mt-2">
+                            Science</button>
+                    </a>
+                    {% endif %}
+
+                    {% if category == 'Sports' %}
+                    <a href="{% url 'entries:entry-list' %}?&category=Sports&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 bg-blue-50 mt-2">
+                            Sports</button>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'entries:entry-list' %}?&category=Sports&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 hover:bg-blue-50 mt-2">
+                            Sports</button>
+                    </a>
+                    {% endif %}
+
+                    {% if category == 'Tech' %}
+                    <a href="{% url 'entries:entry-list' %}?&category=Tech&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 bg-blue-50 mt-2">
+                            Tech</button>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'entries:entry-list' %}?&category=Tech&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 hover:bg-blue-50 mt-2">
+                            Tech</button>
+                    </a>
+                    {% endif %}
+
+                    {% if category == 'Other' %}
+                    <a href="{% url 'entries:entry-list' %}?&category=Other&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 bg-blue-50 mt-2">
+                            Other</button>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'entries:entry-list' %}?&category=Other&by_me={{ by_me }}&likes={{ likes }}">
+                        <button type="button"
+                            class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-full border border-blue-600 hover:bg-blue-50 mt-2">
+                            Other</button>
+                    </a>
+                    {% endif %}
+
+
+                </div>
+            </div>
+
+
+            <div class="my-2 flex sm:flex-row flex-col">
                 <div class="block relative">
                     <span class="h-full absolute inset-y-0 left-0 flex items-center pl-2">
                         <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current text-gray-500">
@@ -104,6 +262,9 @@
                     </form>
                 </div>
             </div>
+
+
+
             <div class="flex mt-3">
                 <h2 class="text-2xl font-semibold text-gray-400 leading-tight">My entries only</h2>
                 <div class="ml-3">
@@ -195,11 +356,10 @@
 
                                 </div>
                                 <div class="flex-grow truncate">
-
-
                                     <div class="flex flex-row mt-2">
-                                        <p class="leading-relaxed text-gray-600 text-xl">Category: </p>
-                                        <p class="leading-relaxed text-gray-600 text-xl ml-2">{{ entry.category }}</p>
+                                        <!-- <p class="leading-relaxed text-gray-600 text-xl font-semibold">Category: </p> -->
+                                        <p class="leading-relaxed text-gray-600 text-xl ml-0 font-semibold">
+                                            {{ entry.category }}</p>
                                     </div>
 
                                     <div class="flex flex-row mt-2">
@@ -211,7 +371,8 @@
                                                     d="M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5zm-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-2zm-3-4h8v2H8z" />
                                             </svg>
                                         </div>
-                                        <h2 class="text-gray-900 text-lg title-font font-medium mb-2 ml-2">
+                                        <h2
+                                            class="text-blue-600 text-opacity-70 text-lg title-font font-medium mb-2 ml-2">
                                             {{ additional_info|get_value:entry.id }}
                                         </h2>
                                     </div>
