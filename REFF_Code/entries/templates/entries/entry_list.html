@@ -272,6 +272,13 @@
                 </div>
             </div>
 
+            <div class="px-5 py-5 bg-white border-b flex flex-col xs:flex-row items-center xs:justify-between">
+                <span class="text-base xs:text-sm text-gray-900">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} ({{ num_entries }} total
+                    entries)
+                </span>
+            </div>
+
             <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
                 <div>
                     <div class="flex flex-wrap">
@@ -425,7 +432,7 @@
                     </div>
 
                     <div class="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
-                        <span class="text-xs xs:text-sm text-gray-900">
+                        <span class="text-base xs:text-sm text-gray-900">
                             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} ({{ num_entries }} total
                             entries)
                         </span>
@@ -434,7 +441,7 @@
                             <a
                                 href="{% url 'entries:entry-list' %}?page={{ page_obj.previous_page_number }}&category={{ category }}&by_me={{ by_me }}&likes={{ likes }}">
                                 <button
-                                    class="text-sm bg-gray-200 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-l">
+                                    class="text-sm bg-gray-200 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-l mr-1">
                                     Prev
                                 </button>
                             </a>
@@ -443,7 +450,7 @@
                             <a
                                 href="{% url 'entries:entry-list' %}?page={{ page_obj.next_page_number }}&category={{ category }}&by_me={{ by_me }}&likes={{ likes }}">
                                 <button
-                                    class="text-sm bg-gray-200 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-r">
+                                    class="text-sm bg-gray-200 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-r ml-1">
                                     Next
                                 </button>
                             </a>
