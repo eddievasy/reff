@@ -41,22 +41,22 @@ class SignupView(generic.CreateView):
 
 class LandingPageView(generic.TemplateView):
     template_name = "landing.html"
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+
         # get all relevant data from DB to pass onto the context
         num_entries = Entry.objects.count()
         num_users = User.objects.count()
         num_reviews = Review.objects.count()
         num_likes = Like.objects.count()
-        
+
         # add data to context
-        context['num_entries']=num_entries
-        context['num_users']=num_users
-        context['num_reviews']=num_reviews
-        context['num_likes']=num_likes
-        
+        context['num_entries'] = num_entries
+        context['num_users'] = num_users
+        context['num_reviews'] = num_reviews
+        context['num_likes'] = num_likes
+
         print(context)
         return context
 
@@ -92,7 +92,7 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
                 entry_user = self.request.user
                 entries = entries.filter(user=entry_user)
                 # print(entries)
-        
+
         if 'likes' in self.request.GET.keys():
             likes = self.request.GET['likes']
             if likes == 'true':
@@ -105,9 +105,8 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
                     entry_id_list.append(like.entry_id)
                 # print(entry_id_list)
                 # filter the entries to only contain the ones liked by the user
-                entries=entries.filter(id__in=entry_id_list)
+                entries = entries.filter(id__in=entry_id_list)
                 # print(entries)
-                
 
         # if the search function is being used, further filter the queryset
         if 'search' in self.request.GET.keys():
@@ -137,13 +136,12 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
         if 'by_me' in self.request.GET.keys() and self.request.GET['by_me'] == 'true':
             by_me = 'true'
         context['by_me'] = by_me
-        
-        # default value for parameter 'likes' is 'false'    
+
+        # default value for parameter 'likes' is 'false'
         likes = 'false'
         if 'likes' in self.request.GET.keys() and self.request.GET['likes'] == 'true':
             likes = 'true'
         context['likes'] = likes
-        
 
         additional_info = {}
 
@@ -338,7 +336,7 @@ class EntryDetailShortURLView(generic.DetailView):
             like_type = self.request.GET['like']
             print('Like type: ', like_type)
             # for like creation
-            if like_type == 'yes':        
+            if like_type == 'yes':
                 # check to see if the like already exists
                 try:
                     like = Like.objects.get(
@@ -363,19 +361,19 @@ class EntryDetailShortURLView(generic.DetailView):
                     )
                     like.delete()
                 except:
-                    print("Like cannot be unliked because it doesn't exist in the database")
-        
+                    print(
+                        "Like cannot be unliked because it doesn't exist in the database")
+
         # add to context whether or not this entry has been liked by the currently logged in user
         try:
             like = Like.objects.get(
                 user=self.request.user,
                 entry=entry,
             )
-            context['already_liked']='yes'
+            context['already_liked'] = 'yes'
         except:
-            context['already_liked']='no'
-        
-        
+            context['already_liked'] = 'no'
+
         print(context)
 
         return context
@@ -426,7 +424,6 @@ class EntryCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = "entries/entry_create.html"
     form_class = EntryModelForm
 
-    
     def get_success_url(self):
         # print(self.object())
         print(self.object.short_url)
@@ -474,7 +471,7 @@ def review_create(request, pk):
         form = ReviewModelForm(request.POST)
         if form.is_valid():
             print('<< Form is valid >>')
-            print('CLEANED DATA ->',form.cleaned_data)
+            print('CLEANED DATA ->', form.cleaned_data)
             comment = form.cleaned_data['comment']
             rating = form.cleaned_data['rating']
             expertise = form.cleaned_data['expertise']
@@ -488,12 +485,12 @@ def review_create(request, pk):
                 expertise=expertise
             )
             short_url = entry.short_url
-            
+
             return redirect(reverse("entry-detail-short-url", kwargs={"short_url": short_url}))
         else:
             print('<< Form is not valid >>')
-            print('CLEANED DATA ->',form.cleaned_data)
-            print('FORM ERRORS ->',form.errors)
+            print('CLEANED DATA ->', form.cleaned_data)
+            print('FORM ERRORS ->', form.errors)
 
     reviews_by_current_user = Review.objects.filter(
         entry=entry_object, user=request.user)
@@ -505,12 +502,22 @@ def review_create(request, pk):
     # Fetch source_domain in order to add to context
     source_domain = url_parser(entry_object.source)
 
+    # check to see if the user logged in is also the user trying to leave a review
+    user_logged_in = request.user
+    user_entry = entry_object.user
+    are_users_the_same = user_logged_in == user_entry
+    print('Are users the same?', are_users_the_same)
+
     context = {
         "form": form,
         "entry": entry_object,
         "reviews_number": reviews_number,
-        "source_domain": source_domain
+        "source_domain": source_domain,
+        'are_users_the_same': are_users_the_same
     }
+
+    print(context)
+
     return render(request, "entries/review_create.html", context)
 
 # Class view
