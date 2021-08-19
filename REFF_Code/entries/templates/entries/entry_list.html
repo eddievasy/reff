@@ -195,24 +195,68 @@
 
                                 </div>
                                 <div class="flex-grow truncate">
-                                    <!-- Below, additional_info is a dictionary, get_value is our custom filter and entry is the key to lookup in the dictionary -->
-                                    <!-- <div class="font-bold">{{ additional_info_2|get_value:entry.id }} </div> -->
-                                    <div class="Stars" style="--rating: {{ additional_info_2|get_value:entry.id }};"
-                                        aria-label="Star rating"></div>
-                                    {% include 'entries/star_rating.html' %}
-                                    <h2 class="text-gray-900 text-lg title-font font-medium mb-3">
-                                        {{ additional_info|get_value:entry.id }}
-                                    </h2>
-                                    <p class="leading-relaxed text-base">{{ entry.fact }}</p>
-                                    <a href="{% url 'entry-detail-short-url' entry.short_url %}"
-                                        class="mt-3 text-blue-500 inline-flex items-center">View
-                                        details
-                                        <svg fill="none" stroke="currentColor" stroke-linecap="round"
-                                            stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2"
-                                            viewBox="0 0 24 24">
-                                            <path d="M5 12h14M12 5l7 7-7 7"></path>
-                                        </svg>
-                                    </a>
+
+
+                                    <div class="flex flex-row mt-2">
+                                        <p class="leading-relaxed text-gray-600 text-xl">Category: </p>
+                                        <p class="leading-relaxed text-gray-600 text-xl ml-2">{{ entry.category }}</p>
+                                    </div>
+
+                                    <div class="flex flex-row mt-2">
+                                        <div class="ml-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
+                                                width="24px" fill="#000000">
+                                                <path d="M0 0h24v24H0V0z" fill="none" />
+                                                <path
+                                                    d="M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5zm-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-2zm-3-4h8v2H8z" />
+                                            </svg>
+                                        </div>
+                                        <h2 class="text-gray-900 text-lg title-font font-medium mb-2 ml-2">
+                                            {{ additional_info|get_value:entry.id }}
+                                        </h2>
+                                    </div>
+
+                                    <div class="border-b mb-3 pb-2">
+                                        <!-- Below, additional_info is a dictionary, get_value is our custom filter and entry is the key to lookup in the dictionary -->
+                                        <!-- <div class="font-bold">{{ additional_info_2|get_value:entry.id }} </div> -->
+                                        <div class="Stars" style="--rating: {{ additional_info_2|get_value:entry.id }};"
+                                            aria-label="Star rating"></div>
+                                        {% include 'entries/star_rating.html' %}
+                                    </div>
+
+                                    <div class="flex flex-row mt-5">
+                                        <div class="ml-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
+                                                width="24px" fill="#000000">
+                                                <path d="M0 0h24v24H0V0z" fill="none" />
+                                                <path
+                                                    d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z" />
+                                            </svg>
+                                        </div>
+                                        <p class="leading-relaxed text-base ml-2 font-jet_brains_mono">{{ entry.fact }}
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <!-- <a href="{% url 'entry-detail-short-url' entry.short_url %}"
+                                            class="mt-3 text-blue-500 inline-flex items-center">View
+                                            details
+                                            <svg fill="none" stroke="currentColor" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2"
+                                                viewBox="0 0 24 24">
+                                                <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                            </svg>
+                                        </a> -->
+
+                                        <div class="mr-2 mt-2">
+                                            <a href="{% url 'entry-detail-short-url' entry.short_url %}">
+                                                <button type="button"
+                                                    class="focus:outline-none text-white text-sm py-1.5 px-5 border-b-4 border-blue-600 rounded-md bg-blue-500 hover:bg-blue-400 font-semibold">View
+                                                    details</button>
+                                            </a>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
