@@ -223,6 +223,10 @@ class ReviewListView(LoginRequiredMixin, generic.ListView):
 
         # Get the entry id of the entry we want to see the reviews for
         entry_id = self.request.GET['id']
+        
+        # add fact to the context
+        context["entry_fact"]=Entry.objects.get(id=entry_id).fact
+        
         entry_short_url = Entry.objects.get(id=entry_id).short_url
         # add entry_short_url to context
         context['entry_short_url'] = entry_short_url
@@ -232,7 +236,7 @@ class ReviewListView(LoginRequiredMixin, generic.ListView):
         # add the number of reviews to the context
         context["num_reviews"] = len(self.get_queryset())
 
-        # print(context)
+        print(context)
 
         return context
 
