@@ -50,6 +50,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # this will allow WhiteNoise to take over simply by passing the --nostatic option to the runserver command
+    'whitenoise.runserver_nostatic',
     # Local apps
     'entries',
     # Third party apps
@@ -65,6 +67,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -152,6 +155,13 @@ STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
 STATIC_ROOT = "static_root"
+
+
+# As part of deploying your application you’ll need to run ./manage.py collectstatic to put all your static files into STATIC_ROOT.
+
+# WhiteNoise comes with a storage backend which automatically 
+# takes care of compressing your files and creating unique names for each version so they can safely be cached forever
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AUTH_USER_MODEL = 'entries.user'
 

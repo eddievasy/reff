@@ -1,0 +1,17 @@
+{
+  "name": "jstools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tailwind build ../css/tailwind.css -o ../css/style.css && cleancss -o ../css/style.min.css ../css/style.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "autoprefixer": "^10.3.1",
+    "clean-css-cli": "^5.3.2",
+    "tailwindcss": "^2.2.7"
+  }
+}
