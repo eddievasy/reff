@@ -324,7 +324,12 @@
 
 
             <div class="flex mt-3">
+                {% if by_me == 'false' %}
                 <h2 class="text-2xl font-semibold text-gray-400 leading-tight">My entries only</h2>
+                {% else %}
+                <h2 class="text-2xl font-semibold text-gray-800 leading-tight">My entries only</h2>
+                {% endif %}
+
                 <div class="ml-3">
                     {% include "entries/switch_button_myentries.html" %}
                 </div>
