@@ -2,7 +2,8 @@
 {% load tailwind_filters %}
 {% block content %}
 
-<div class="max-w-lg mx-auto">
+<h1 class="text-4xl text-gray-800 m-5 md:max-w-lg md:mx-auto">New account</h1>
+<div class="md:max-w-lg md:mx-auto m-5">
     <form method="post">
         {% csrf_token %}
         {{ form|crispy }}

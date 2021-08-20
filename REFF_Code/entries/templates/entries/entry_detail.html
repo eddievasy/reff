@@ -3,8 +3,8 @@
 
 {% block content %}
 <section class="text-gray-600 body-font overflow-hidden">
-  <div class="container px-5 py-10 mx-auto">
-    <div class="lg:w-3/5 mx-auto flex flex-wrap">
+  <div class="container px-5 py-5 mx-auto">
+    <div class="lg:w-8/12 mx-auto flex flex-wrap">
       <div class="lg:w-4/5">
         <h2 class="text-sm title-font text-gray-500 tracking-widest">Category</h2>
         <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{ entry.category }}</h1>
@@ -15,11 +15,11 @@
           <a href="{% url 'entries:entry-update' entry.pk %}"
             class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 hover:bg-gray-100">Update</a>
         </div>
-        <p class="leading-relaxed mb-4 font-jet_brains_mono">{{ entry.fact }}</p>
+        <p class="leading-relaxed mb-4 font-jet_brains_mono break-words">{{ entry.fact }}</p>
         <div class="flex border-t border-gray-200 py-2">
 
           <span class="text-blue-500">Source</span>
-          <span class="ml-auto mr-2 text-gray-900 font-semibold text-blue-500 hover:text-blue-800"><a
+          <span class="ml-auto mr-2 text-gray-900 font-semibold text-blue-500 hover:text-blue-800 break-all pl-2 sm:pl-0"><a
               href="{{ entry.source }}">{{ source_domain }}</a></span>
 
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
@@ -77,8 +77,8 @@
 
         </div>
         <div class="flex">
-          <span class="title-font font-medium text-2xl text-gray-900">Score: {{ average_score }}</span>
-          <a class="flex ml-auto text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded"
+          <span class="title-font font-medium text-lg sm:text-2xl text-gray-900">Score: {{ average_score }}</span>
+          <a class="flex ml-auto text-white bg-blue-500 border-0 px-3 sm:py-2 sm:px-6 focus:outline-none hover:bg-blue-600 rounded"
             href="{% url 'entries:review-list' %}?id={{ entry.id }}">
             <button class="font-semibold">See
               reviews</button> </a>
