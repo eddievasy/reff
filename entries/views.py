@@ -24,6 +24,9 @@ from django.db.models import Avg
 # use this method for passing the current date and time when filling a request-type entry
 from datetime import datetime
 
+# Used for searching the DB against multiple fields
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+
 # Generally speaking, web pages follow the CRUD+L format: Create, Retrieve, Updated, Delete and List
 
 # Class view
@@ -111,7 +114,19 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
         # if the search function is being used, further filter the queryset
         if 'search' in self.request.GET.keys():
             search_keyword = self.request.GET['search']
-            entries = entries.filter(fact__contains=search_keyword)
+            # entries = entries.filter(fact__contains=search_keyword)
+            if len(search_keyword) > 0:
+                search_vector = SearchVector(
+                    "fact", weight="A") + SearchVector("source", weight="A") + SearchVector("user__username", weight="A")
+                search_query = SearchQuery(search_keyword, search_type='websearch')
+                # returns all of the entries that contain all of the searched keywords (they don't have to be consecutive words in the entry)
+                # so far the search takes into account the fact, the source and the user
+                
+                # first filter looks up all entries containing the relevant keywords (fact, source and username)
+                entries = Entry.objects.annotate(search=search_vector, rank=SearchRank(search_vector, search_query)).filter(search=search_query).order_by("-rank")
+                # if no entries are returned, the second filter searches at substring level (fact, source and username)
+                if (len(entries)==0):
+                    entries = Entry.objects.annotate(search=search_vector, rank=SearchRank(search_vector, search_query)).filter(search__icontains=search_keyword).order_by("-rank")
 
         # make sure only the full entries are included (not the request-type entries)
         entries = entries.filter(normal_entry=True)
@@ -223,10 +238,10 @@ class ReviewListView(LoginRequiredMixin, generic.ListView):
 
         # Get the entry id of the entry we want to see the reviews for
         entry_id = self.request.GET['id']
-        
+
         # add fact to the context
-        context["entry_fact"]=Entry.objects.get(id=entry_id).fact
-        
+        context["entry_fact"] = Entry.objects.get(id=entry_id).fact
+
         entry_short_url = Entry.objects.get(id=entry_id).short_url
         # add entry_short_url to context
         context['entry_short_url'] = entry_short_url

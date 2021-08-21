@@ -50,6 +50,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # this module is used for more complex DB searches via the user's input
+    'django.contrib.postgres',
     # this will allow WhiteNoise to take over simply by passing the --nostatic option to the runserver command
     'whitenoise.runserver_nostatic',
     # Local apps
@@ -178,3 +180,6 @@ LOGIN_URL = "/login"
 # The following tell the Crispy Forms app to use the Tailwind package (which has also been installed via pip)
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = "tailwind"
+
+# The following is needed because we've migrated from Django 3.1.4 to 3.2.6
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
