@@ -85,6 +85,7 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
         if 'search' in self.request.GET.keys():
             search_keyword = self.request.GET['search']
             # entries = entries.filter(fact__contains=search_keyword)
+            # if the value of the parameter is longer than 0 characters, do the lookup
             if len(search_keyword) > 0:
                 search_vector = SearchVector(
                     "fact", weight="A") + SearchVector("source", weight="A") + SearchVector("user__username", weight="A")
@@ -97,9 +98,11 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
                 # if no entries are returned, the second filter searches at substring level (fact, source and username)
                 if (len(entries)==0):
                     entries = Entry.objects.annotate(search=search_vector, rank=SearchRank(search_vector, search_query)).filter(search__icontains=search_keyword).order_by("-rank")
+            # otherwise just return all entries        
             else:
                 entries = Entry.objects.all().order_by('-date_created')
         # Order entries by date_created (the '-' means last added first)
+        # return all entries if there is no search parameter in the URL
         else:    
             entries = Entry.objects.all().order_by('-date_created')
         
@@ -211,9 +214,23 @@ class ReviewListView(LoginRequiredMixin, generic.ListView):
         # check to see if there is a 'search' parameter in the URL
         if 'search' in self.request.GET.keys():
             # fetch all reviews for that specific entry_id which contain the search parameter
-            reviews = Review.objects.filter(entry_id=entry_id)
+            # reviews = Review.objects.filter(entry_id=entry_id)
+            # search_keyword = self.request.GET['search']
+            # reviews = reviews.filter(comment__contains=search_keyword)
+            
             search_keyword = self.request.GET['search']
-            reviews = reviews.filter(comment__contains=search_keyword)
+            # if the search parameter contains a value, do the lookup
+            if len(search_keyword) > 0: 
+                search_vector = SearchVector("comment", weight="A") + SearchVector("rating", weight="A")
+                search_query = SearchQuery(search_keyword, search_type='websearch')
+            
+                reviews = Review.objects.filter(entry_id=entry_id).annotate(search=search_vector, rank=SearchRank(search_vector, search_query)).filter(search=search_query).order_by("-rank")
+                if (len(reviews)==0):
+                    reviews = Review.objects.filter(entry_id=entry_id).annotate(search=search_vector, rank=SearchRank(search_vector, search_query)).filter(search__icontains=search_keyword).order_by("-rank")
+            # otherwise return all reviews for this entry        
+            else:
+                reviews = Review.objects.filter(entry_id=entry_id)
+        # return all reviews for this entry if there is no search parameter in the URL    
         else:
             # fetch all reviews for that specific entry_id
             reviews = Review.objects.filter(entry_id=entry_id)
