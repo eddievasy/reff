@@ -4,70 +4,75 @@
 {% block content %}
 
 
-{% if entry.normal_entry == False %}
-<h1 class="text-4xl text-gray-800 mx-auto max-w-lg mt-5">Provide a valid source</h1>
-<h1 class="text-lg text-gray-800 mx-auto max-w-lg mt-5">
-    <div class="font-semibold text-xl text-blue-500">{{ entry.user }}</div> is kindly requesting that you complete the
-    following fields:
-</h1>
-<h1 class="text-lg text-gray-800 mx-auto max-w-lg mt-5 pt-5 border-t"> The field below the contains fact in question. Amend if necessary.
-</h1>
-<div class="max-w-lg mx-auto mt-5">
-    <!-- 'action="."' below indicated where the form is submitted. '.' means current URL -->
-    <form method="POST" action=".">
-        <!-- The csrf token below is good security implementation for form submission within Django -->
-        {% csrf_token %}
-        {{ form|crispy }}
-
-        <!-- The styling below is to remove the asterisk from the mandatory fields -->
-        <style>
-            .asteriskField {
-                display: none;
-            }
-        </style>
-
-        <button class="w-full bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md text-white" type="submit"> Submit
-        </button>
-    </form>
-    <div class="flex flex-row mb-5 mt-5">
-        <button onclick="copyToClipboard()"
-            class="rounded-full w-10 h-10 bg-gray-200 hover:bg-gray-300 p-0 border-0 inline-flex items-center justify-center text-gray-500">
-            <svg fill="grey" fill-opacity="0.2" stroke="grey" stroke-linecap="round" stroke-width="3" stroke-linejoin="round" stroke-width="2" class="w-5 h-5"
-                viewBox="0 0 24 24">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
-                <rect x="9" y="3" width="6" height="4" rx="2" />
-            </svg>
-        </button>
-
-        <p class="mt-3 text-xl ml-4"> Copy link to clipboard </p>
-
-        <script>
-            function copyToClipboard(text) {
-                var inputc = document.body.appendChild(document.createElement("input"));
-                inputc.value = window.location.href;
-                inputc.focus();
-                inputc.select();
-                document.execCommand('copy');
-                inputc.parentNode.removeChild(inputc);
-                alert("URL Copied.");
-            }
-        </script>
-    </div>
-    <div class='mt-5 mb-5 border-t border-gray-500 pt-2'><a class="hover:text-blue-500 mt-3 text-xl"
-            href="{% url 'entries:entry-list' %}">Back to entry list</a></div>
-
-</div>
-{% else %}
-<div class="max-w-lg mx-auto mt-10 flex flex-col md:pr-10 md:mb-0 mb-6 pr-0 w-full md:w-auto md:text-left text-center">
-    <h2 class="text-xs text-indigo-500 tracking-widest font-medium title-font mb-1">ACCESS DENIED
-    </h2>
-    <h1 class="md:text-3xl text-2xl font-medium title-font text-gray-900">This request-type entry has already been
-        filled out
+{% if entry.normal_entry == False %} <div class="m-5 md:max-w-lg md:mx-auto">
+    <h1 class="text-4xl text-gray-800 mx-auto max-w-lg mt-5">Provide a valid source</h1>
+    <h1 class="text-lg text-gray-800 mx-auto max-w-lg mt-5">
+        <div class="font-semibold text-xl text-blue-500">{{ entry.user }}</div> is kindly requesting that you complete
+        the
+        following fields:
     </h1>
+    <h1 class="text-lg text-gray-800 mx-auto max-w-lg mt-5 pt-5 border-t"> The field below the contains fact in
+        question. Amend if necessary.
+    </h1>
+    <div class="max-w-lg mx-auto mt-5">
+        <!-- 'action="."' below indicated where the form is submitted. '.' means current URL -->
+        <form method="POST" action=".">
+            <!-- The csrf token below is good security implementation for form submission within Django -->
+            {% csrf_token %}
+            {{ form|crispy }}
 
-    <div class='mt-5 mb-10 border-t border-gray-500 pt-2'><a class="hover:text-blue-500 mt-3 text-xl"
-        href="{% url 'entry-detail-short-url' short_url=entry.short_url %}">Go to entry page</a></div>
+            <!-- The styling below is to remove the asterisk from the mandatory fields -->
+            <style>
+                .asteriskField {
+                    display: none;
+                }
+            </style>
+
+            <button class="w-full bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md text-white" type="submit"> Submit
+            </button>
+        </form>
+        <div class="flex flex-row mb-5 mt-5">
+            <button onclick="copyToClipboard()"
+                class="rounded-full w-10 h-10 bg-gray-200 hover:bg-gray-300 p-0 border-0 inline-flex items-center justify-center text-gray-500">
+                <svg fill="grey" fill-opacity="0.2" stroke="grey" stroke-linecap="round" stroke-width="3"
+                    stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+                    <rect x="9" y="3" width="6" height="4" rx="2" />
+                </svg>
+            </button>
+
+            <p class="mt-3 text-xl ml-4"> Copy link to clipboard </p>
+
+            <script>
+                function copyToClipboard(text) {
+                    var inputc = document.body.appendChild(document.createElement("input"));
+                    inputc.value = window.location.href;
+                    inputc.focus();
+                    inputc.select();
+                    document.execCommand('copy');
+                    inputc.parentNode.removeChild(inputc);
+                    alert("URL Copied.");
+                }
+            </script>
+        </div>
+        <div class='mt-5 mb-5 border-t border-gray-500 pt-2'><a class="hover:text-blue-500 mt-3 text-xl"
+                href="{% url 'entries:entry-list' %}">Back to entry list</a></div>
+
+    </div>
+    {% else %}
+    <div
+        class="max-w-lg mx-auto mt-10 flex flex-col md:pr-10 md:mb-0 mb-6 pr-0 w-full md:w-auto md:text-left text-center">
+        <h2 class="text-xs text-indigo-500 tracking-widest font-medium title-font mb-1">ACCESS DENIED
+        </h2>
+        <h1 class="md:text-3xl text-2xl font-medium title-font text-gray-900">This request-type entry has already been
+            filled out
+        </h1>
+
+        <div class='mt-5 mb-10 border-t border-gray-500 pt-2'><a class="hover:text-blue-500 mt-3 text-xl"
+                href="{% url 'entry-detail-short-url' short_url=entry.short_url %}">Go to entry page</a></div>
+
+    </div>
 
 </div>
 {% endif %}
