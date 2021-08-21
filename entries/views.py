@@ -80,9 +80,30 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
     # queryset = Entry.objects.all().order_by('-date_created')
 
     def get_queryset(self):
-        # print(self.request.GET)
+        
+        # if the search function is being used, further filter the queryset
+        if 'search' in self.request.GET.keys():
+            search_keyword = self.request.GET['search']
+            # entries = entries.filter(fact__contains=search_keyword)
+            if len(search_keyword) > 0:
+                search_vector = SearchVector(
+                    "fact", weight="A") + SearchVector("source", weight="A") + SearchVector("user__username", weight="A")
+                search_query = SearchQuery(search_keyword, search_type='websearch')
+                # returns all of the entries that contain all of the searched keywords (they don't have to be consecutive words in the entry)
+                # so far the search takes into account the fact, the source and the user
+                
+                # first filter looks up all entries containing the relevant keywords (fact, source and username)
+                entries = Entry.objects.annotate(search=search_vector, rank=SearchRank(search_vector, search_query)).filter(search=search_query).order_by("-rank")
+                # if no entries are returned, the second filter searches at substring level (fact, source and username)
+                if (len(entries)==0):
+                    entries = Entry.objects.annotate(search=search_vector, rank=SearchRank(search_vector, search_query)).filter(search__icontains=search_keyword).order_by("-rank")
+            else:
+                entries = Entry.objects.all().order_by('-date_created')
         # Order entries by date_created (the '-' means last added first)
-        entries = Entry.objects.all().order_by('-date_created')
+        else:    
+            entries = Entry.objects.all().order_by('-date_created')
+        
+        
         if 'category' in self.request.GET.keys():
             category = self.request.GET['category']
             # if the category is different to 'all' apply another filter to the entries
@@ -110,23 +131,6 @@ class EntryListView(LoginRequiredMixin, generic.ListView):
                 # filter the entries to only contain the ones liked by the user
                 entries = entries.filter(id__in=entry_id_list)
                 # print(entries)
-
-        # if the search function is being used, further filter the queryset
-        if 'search' in self.request.GET.keys():
-            search_keyword = self.request.GET['search']
-            # entries = entries.filter(fact__contains=search_keyword)
-            if len(search_keyword) > 0:
-                search_vector = SearchVector(
-                    "fact", weight="A") + SearchVector("source", weight="A") + SearchVector("user__username", weight="A")
-                search_query = SearchQuery(search_keyword, search_type='websearch')
-                # returns all of the entries that contain all of the searched keywords (they don't have to be consecutive words in the entry)
-                # so far the search takes into account the fact, the source and the user
-                
-                # first filter looks up all entries containing the relevant keywords (fact, source and username)
-                entries = Entry.objects.annotate(search=search_vector, rank=SearchRank(search_vector, search_query)).filter(search=search_query).order_by("-rank")
-                # if no entries are returned, the second filter searches at substring level (fact, source and username)
-                if (len(entries)==0):
-                    entries = Entry.objects.annotate(search=search_vector, rank=SearchRank(search_vector, search_query)).filter(search__icontains=search_keyword).order_by("-rank")
 
         # make sure only the full entries are included (not the request-type entries)
         entries = entries.filter(normal_entry=True)
