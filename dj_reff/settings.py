@@ -177,6 +177,9 @@ LOGIN_REDIRECT_URL = '/entries'
 # This makes sure that the login redirects are taken to the appropriate URL
 LOGIN_URL = "/login"
 
+# The following will only apply to debug mode
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
 # The following tell the Crispy Forms app to use the Tailwind package (which has also been installed via pip)
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = "tailwind"

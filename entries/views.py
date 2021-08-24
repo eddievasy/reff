@@ -486,12 +486,12 @@ class EntryCreateView(LoginRequiredMixin, generic.CreateView):
         entry.short_url = random_short_url
         entry.save()
 
-        send_mail(
-            subject="New entry has been created",
-            message="Thanks for contributing to the REFF database.",
-            from_email="test@test.com",
-            recipient_list=[entry.user.email],
-        )
+        # send_mail(
+        #     subject="New entry has been created",
+        #     message="Thanks for contributing to the REFF database.",
+        #     from_email="test@test.com",
+        #     recipient_list=[entry.user.email],
+        # )
         return super(EntryCreateView, self).form_valid(form)
 
 # Function based view
