@@ -221,7 +221,7 @@ class ReviewListView(LoginRequiredMixin, generic.ListView):
             search_keyword = self.request.GET['search']
             # if the search parameter contains a value, do the lookup
             if len(search_keyword) > 0: 
-                search_vector = SearchVector("comment", weight="A") + SearchVector("rating", weight="A") + SearchVector("user", weight="A")
+                search_vector = SearchVector("comment", weight="A") + SearchVector("rating", weight="A") + SearchVector("user__username", weight="A")
                 search_query = SearchQuery(search_keyword, search_type='websearch')
             
                 reviews = Review.objects.filter(entry_id=entry_id).annotate(search=search_vector, rank=SearchRank(search_vector, search_query)).filter(search=search_query).order_by("-rank")
